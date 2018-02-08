@@ -1,25 +1,34 @@
 ﻿using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class fileWriteTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        const string FILE_NAME = "MyFile.txt";
+        try {
 
-        if (File.Exists(FILE_NAME)){
-            Debug.Log("File already exists.");
-            return;
+            //Pass the filepath and filename to the StreamWriter Constructor
+            StreamWriter sw = new StreamWriter("MyFile.txt");
+
+            //Write a line of text
+            sw.WriteLine("Hello World!!");
+
+            //Write a second line of text
+            sw.WriteLine("From the StreamWriter class");
+
+            //Close the file
+            sw.Close();
         }
-        StreamWriter sr = File.CreateText(FILE_NAME);
-        sr.WriteLine("This is my file.");
-        sr.WriteLine("I can write ints {0} or floats {1}, and so on.", 1, 4.2);
-        sr.Close();
+        catch (Exception e) {
+            Debug.Log("Exception: " + e.Message);
+        }
+        finally {
+            Debug.Log("Executing finally block.");
+        }
     }
-        
 	
 	// Update is called once per frame
 	void Update () {
