@@ -11,7 +11,7 @@ public class fileReadTest : MonoBehaviour {
         String line;
         try {
             //Pass the file path and file name to the StreamReader constructor
-            StreamReader sr = new StreamReader("MyFile.txt");
+            StreamReader sr = new StreamReader("Saves/MyFile.txt");
 
             //Read the first line of text
             line = sr.ReadLine();

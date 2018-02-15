@@ -11,7 +11,7 @@ public class fileWriteTest : MonoBehaviour {
         try {
 
             //Pass the filepath and filename to the StreamWriter Constructor
-            StreamWriter sw = new StreamWriter("MyFile.txt");
+            StreamWriter sw = new StreamWriter("Saves/MyFile.txt");
 
             //Write a line of text
             sw.WriteLine("Hello World!!");
