@@ -84,7 +84,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\scripts\background.cs" />
     <Compile Include="Assets\scripts\cycles\cycleMovement.cs" />
+    <Compile Include="Assets\scripts\cycles\humanControl.cs" />
     <Compile Include="Assets\scripts\fileReadTest.cs" />
     <Compile Include="Assets\scripts\fileWriteTest.cs" />
     <Compile Include="Assets\scripts\gridStart.cs" />

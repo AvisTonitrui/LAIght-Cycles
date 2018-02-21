@@ -13,7 +13,7 @@ public class gridStart : MonoBehaviour {
 		for (int x = -gridSize; x <= gridSize; x++) {
             for (int y = -gridSize; y <= gridSize; y++) {
                 GameObject thisTrail = Instantiate(trail, new Vector3(x, y, 1), Quaternion.identity);
-                thisTrail.SetActive(false);
+                thisTrail.GetComponent<Renderer>().enabled = false;
             }
 
         }
