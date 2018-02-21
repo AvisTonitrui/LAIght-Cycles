@@ -39,10 +39,11 @@ public class cycleMovement : MonoBehaviour {
             cycle.transform.position = Vector3.MoveTowards(cycle.transform.position, cycle.transform.position + cycle.transform.right, speed); //Constantly moves the cycle forward
         }
         
-        if (cycle.transform.position.x % 1 == 0 && cycle.transform.position.y % 1 == 0) { //Checks if cycle is on a grid point
+        if (Mathf.Approximately(cycle.transform.position.x % 1, 0) && Mathf.Approximately(cycle.transform.position.y % 1, 0)) { //Checks if cycle is on a grid point
             trail.GetComponent<SpriteRenderer>().sprite = color; //Changes the trail to the proper color
             trail.GetComponent<Renderer>().enabled = true; //Enables the trail
             turn(direction); //Turns the cycle in the last direction it was given
+            Debug.Log("Hit a grid point!");
         }
 	}
 }
