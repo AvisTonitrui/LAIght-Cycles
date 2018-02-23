@@ -11,22 +11,29 @@ public class cycleMovement : MonoBehaviour {
     GameObject trail; //The trail of the cycle
     public Sprite color; //The sprite that chooses the color of the trail
     public GameObject processing; //The background processing
+    public RaycastHit2D hit; //The variable for what raycasts hit
+    public int player, opponent; //The player and the opponent numbers
     
     private void turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively)
         if (face == 1) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 90); //turn up
             cycle.transform.position = new Vector3(Mathf.Round(cycle.transform.position.x), cycle.transform.position.y, 0);
-        }else if (face == 2) {
+            hit = Physics2D.Raycast(cycle.transform.position, new Vector3(cycle.transform.position.x, cycle.transform.position.y + 1, 1), 1, 0, 1, 1);
+        }
+        else if (face == 2) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 270); //turn down
             cycle.transform.position = new Vector3(Mathf.Round(cycle.transform.position.x), cycle.transform.position.y, 0);
+            hit = Physics2D.Raycast(cycle.transform.position, new Vector3(cycle.transform.position.x, cycle.transform.position.y - 1, 1), 1, 0, 1, 1);
         }
         else if (face == 3) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 180); //turn left
             cycle.transform.position = new Vector3(cycle.transform.position.x, Mathf.Round(cycle.transform.position.y), 0);
+            hit = Physics2D.Raycast(cycle.transform.position, new Vector3(cycle.transform.position.x - 1, cycle.transform.position.y, 1), 1, 0, 1, 1);
         }
         else if (face == 4) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 0); //turn right
             cycle.transform.position = new Vector3(cycle.transform.position.x, Mathf.Round(cycle.transform.position.y), 0);
+            hit = Physics2D.Raycast(cycle.transform.position, new Vector3(cycle.transform.position.x + 1, cycle.transform.position.y, 1), 1, 0, 1, 1);
         }
     }
 
@@ -61,7 +68,21 @@ public class cycleMovement : MonoBehaviour {
             trail.GetComponent<Renderer>().enabled = true; //Enables the trail
             turn(direction); //Turns the cycle in the last direction it was given
 
+            //debug rays
+            Debug.DrawRay(cycle.transform.position, new Vector3(cycle.transform.position.x + 1, cycle.transform.position.y, 1), Color.red, 1);
+            Debug.DrawRay(cycle.transform.position, new Vector3(cycle.transform.position.x - 1, cycle.transform.position.y, 1), Color.red, 1);
+            Debug.DrawRay(cycle.transform.position, new Vector3(cycle.transform.position.x, cycle.transform.position.y + 1, 1), Color.red, 1);
+            Debug.DrawRay(cycle.transform.position, new Vector3(cycle.transform.position.x, cycle.transform.position.y - 1, 1), Color.red, 1);
+
             //These are the controls to make sure that the square the cycle is heading into is legal
+
+
+            if (hit != null) {
+                if (hit.collider.gameObject.tag == "wall" || hit.collider.gameObject.tag == "trail" || hit.collider.gameObject.tag == "cycle") {
+                    processing.GetComponent<background>().victor = opponent;
+                }
+            }
+            
         }
 
         
