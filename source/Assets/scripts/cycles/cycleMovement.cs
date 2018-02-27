@@ -11,8 +11,9 @@ public class cycleMovement : MonoBehaviour {
     GameObject trail; //The trail of the cycle
     public Sprite color; //The sprite that chooses the color of the trail
     public GameObject processing; //The background processing
-
     public int player, opponent; //The player and the opponent numbers
+    public GameObject cycleOpponent; //The actual cycle of the opponent
+    public bool hasHit = false;
 
     private RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively)
         if (face == 1) {
@@ -55,6 +56,9 @@ public class cycleMovement : MonoBehaviour {
         if (processing.GetComponent<background>().gameActive == true) {
             cycle.transform.position = Vector3.MoveTowards(cycle.transform.position, cycle.transform.position + cycle.transform.right, speed); //Constantly moves the cycle forward
         }
+        else {
+            trail.GetComponent<Renderer>().enabled = false;
+        }
 
         //Corrects floating Point errors
         if (Mathf.Abs(cycle.transform.position.x) < 0.01) {
@@ -72,26 +76,39 @@ public class cycleMovement : MonoBehaviour {
             //These are the controls to make sure that the square the cycle is heading into is legal
 
 
-            if (hits.Length != 0) {
+            if (hits.Length != 0 && processing.GetComponent<background>().gameActive == true) {
                 //Debug.Log("Hit");
+                int winner = 0;
+                int cycles = 0;
+
                 for (int i = 0; i < hits.Length; i++) {
                     if (hits[i].collider.gameObject.tag == "wall") { // hit a wall
-                        processing.GetComponent<background>().victor = opponent;
-                        Debug.Log("Wall");
+                        winner = opponent;
+                        cycleOpponent.GetComponent<cycleMovement>().hasHit = true;
+                        //Debug.Log(winner);
+                    }
+                    else if (hits[i].collider.gameObject.tag == "cycle") {
+                        cycles += 1;
+                        if (cycles >= 2) {
+                            winner = 3;
+                            //Debug.Log(winner);
+                            processing.GetComponent<background>().victor = winner;
+                            break;
+                        }
                     }
                     else if (hits[i].collider.gameObject.tag == "trail") { //hit a trail, making sure that that is an active trail
                         if (hits[i].collider.gameObject.GetComponent<Renderer>().enabled == true) {
-                            processing.GetComponent<background>().victor = opponent;
-                            Debug.Log("Active Trail");
-                        }
-                        else {
-                            Debug.Log("Inactive Trail.");
+                            winner = opponent;
+                            cycleOpponent.GetComponent<cycleMovement>().hasHit = true;
+                            //Debug.Log(winner);
                         }
                     }
-                    else if (hits[i].collider.gameObject.tag == "cycle") {
-                        processing.GetComponent<background>().victor = 3;
-                        Debug.Log("Cycle");
+
+                    if (!hasHit) {
+                        processing.GetComponent<background>().victor = winner;
+                        //Debug.Log(winner);
                     }
+                    
                 }
             }
 
