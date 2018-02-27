@@ -13,27 +13,32 @@ public class cycleMovement : MonoBehaviour {
     public GameObject processing; //The background processing
     public int player, opponent; //The player and the opponent numbers
     public GameObject cycleOpponent; //The actual cycle of the opponent
-    public bool hasHit = false;
+    public bool hasHit = false; //If the opponent has hit something, preventing the reset of the victor value and preventing a collision
+    public GameObject marker; //A marker for the AI to use to locate the cycle
 
-    private RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively)
+    private RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively), raycasts for what's ahead and places the marker for the AI
         if (face == 1) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 90); //turn up
             cycle.transform.position = new Vector3(Mathf.Round(cycle.transform.position.x), cycle.transform.position.y, 0);
+            marker.transform.position = cycle.transform.position + new Vector3(0, 1, 0);
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.up, 1);
         }
         else if (face == 2) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 270); //turn down
             cycle.transform.position = new Vector3(Mathf.Round(cycle.transform.position.x), cycle.transform.position.y, 0);
+            marker.transform.position = cycle.transform.position + new Vector3(0, -1, 0);
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.up * -1, 1);
         }
         else if (face == 3) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 180); //turn left
             cycle.transform.position = new Vector3(cycle.transform.position.x, Mathf.Round(cycle.transform.position.y), 0);
+            marker.transform.position = cycle.transform.position + new Vector3(-1, 0, 0);
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.left, 1);
         }
         else if (face == 4) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 0); //turn right
             cycle.transform.position = new Vector3(cycle.transform.position.x, Mathf.Round(cycle.transform.position.y), 0);
+            marker.transform.position = cycle.transform.position + new Vector3(1, 0, 0);
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.right, 1);
         }
         else {
