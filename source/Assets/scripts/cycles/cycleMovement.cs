@@ -14,9 +14,40 @@ public class cycleMovement : MonoBehaviour {
     public int player, opponent; //The player and the opponent numbers
     public GameObject cycleOpponent; //The actual cycle of the opponent
     public bool hasHit = false; //If the opponent has hit something, preventing the reset of the victor value and preventing a collision
-    public GameObject marker; //A marker for the AI to use to locate the cycle
+    public GameObject marker, N, E, S, W, NE, SE, SW, NW; //The markers for AI processing
+    const int wallCoordinate = 45; //The constant coordinate for the wals
 
-    private RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively), raycasts for what's ahead and places the marker for the AI
+    private void placeMarkers() { //Function that places the markers onto the walls for AI processing
+        //initializing a couple variables to reduce fetching time
+        float mainMarkerX = marker.transform.position.x;
+        float mainMarkerY = marker.transform.position.y;
+
+        //placing the horizontal axis markers
+        N.transform.position = new Vector3(mainMarkerX, wallCoordinate, 0);
+        E.transform.position = new Vector3(wallCoordinate, mainMarkerY, 0);
+        S.transform.position = new Vector3(mainMarkerX, -wallCoordinate, 0);
+        W.transform.position = new Vector3(-wallCoordinate, mainMarkerY, 0);
+
+        //placing NE marker
+        if (wallCoordinate - marker.transform.position.y > wallCoordinate - marker.transform.position.x) {
+            NE.transform.position = N.transform.position + new Vector3(0, wallCoordinate - marker.transform.position.y, 0);
+        }
+        else {
+            NE.transform.position = E.transform.position + new Vector3(wallCoordinate - marker.transform.position.x, 0, 0);
+        }
+
+        //placing SE
+        if (marker.transform.position.y + wallCoordinate > wallCoordinate - marker.transform.position.x) {
+            SE.transform.position = S.transform.position + new Vector3(0, marker.transform.position.y + wallCoordinate, 0);
+        }
+        else {
+            SE.transform.position = E.transform.position + new Vector3(wallCoordinate - marker.transform.position.x, 0, 0);
+        }
+
+        //placing SW (TODO)
+    }
+
+    RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively), raycasts for what's ahead and places the marker for the AI
         if (face == 1) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 90); //turn up
             cycle.transform.position = new Vector3(Mathf.Round(cycle.transform.position.x), cycle.transform.position.y, 0);
@@ -113,18 +144,12 @@ public class cycleMovement : MonoBehaviour {
                         processing.GetComponent<background>().victor = winner;
                         //Debug.Log(winner);
                     }
-                    
+
                 }
             }
 
             trail.GetComponent<SpriteRenderer>().sprite = color; //Changes the trail to the proper color
             trail.GetComponent<Renderer>().enabled = true; //Enables the trail
-
-            //debug rays
-            //Debug.DrawRay(cycle.transform.position, new Vector3(cycle.transform.position.x + 1, cycle.transform.position.y, 1), Color.red, 1);
-            //Debug.DrawRay(cycle.transform.position, new Vector3(cycle.transform.position.x - 1, cycle.transform.position.y, 1), Color.red, 1);
-            //Debug.DrawRay(cycle.transform.position, new Vector3(cycle.transform.position.x, cycle.transform.position.y + 1, 1), Color.red, 1);
-            //Debug.DrawRay(cycle.transform.position, new Vector3(cycle.transform.position.x, cycle.transform.position.y - 1, 1), Color.red, 1);
         }
 
 
