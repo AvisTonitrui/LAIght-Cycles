@@ -6,9 +6,10 @@ using System.Linq;
 public class gridStart : MonoBehaviour {
 
     public GameObject trail;
-    private const int gridSize = 44;
+    public const int gridSize = 44;
     public List<GameObject> map= new List<GameObject>();
     Transform listMap;
+    public bool[,] trailMap = new bool[gridSize * 2, gridSize * 2];
 
     // Use this for initialization
     void Start() {
@@ -19,6 +20,12 @@ public class gridStart : MonoBehaviour {
                 map.ElementAt(map.Count - 1).GetComponent<Renderer>().enabled = false;
             }
 
+        }
+
+        for (int x = 0; x < gridSize * 2; x++) {
+            for (int y = 0; y < gridSize * 2; y++) {
+                trailMap[x, y] = false;
+            }
         }
     }
 

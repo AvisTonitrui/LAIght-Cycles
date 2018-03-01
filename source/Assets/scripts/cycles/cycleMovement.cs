@@ -9,13 +9,15 @@ public class cycleMovement : MonoBehaviour {
     private const float speed = 0.25f; //The speed of the cycle, which is constant but will need testing
     public GameObject cycle; //The cycle te script is attached to
     GameObject trail; //The trail of the cycle
+    int trailX, trailY; //the position of the trail
     public Sprite color; //The sprite that chooses the color of the trail
     public GameObject processing; //The background processing
     public int player, opponent; //The player and the opponent numbers
     public GameObject cycleOpponent; //The actual cycle of the opponent
     public bool hasHit = false; //If the opponent has hit something, preventing the reset of the victor value and preventing a collision
-    public GameObject marker, N, E, S, W, NE, SE, SW, NW; //The markers for AI processing
+    public GameObject marker, N, E, S, W; //The markers for AI processing
     const int wallCoordinate = 45; //The constant coordinate for the wals
+    const int gridSize = 20;
 
     private void placeMarkers() { //Function that places the markers onto the walls for AI processing
         //initializing a couple variables to reduce fetching time
@@ -27,24 +29,6 @@ public class cycleMovement : MonoBehaviour {
         E.transform.position = new Vector3(wallCoordinate, mainMarkerY, 0);
         S.transform.position = new Vector3(mainMarkerX, -wallCoordinate, 0);
         W.transform.position = new Vector3(-wallCoordinate, mainMarkerY, 0);
-
-        //placing NE marker
-        if (wallCoordinate - marker.transform.position.y > wallCoordinate - marker.transform.position.x) {
-            NE.transform.position = N.transform.position + new Vector3(0, wallCoordinate - marker.transform.position.y, 0);
-        }
-        else {
-            NE.transform.position = E.transform.position + new Vector3(wallCoordinate - marker.transform.position.x, 0, 0);
-        }
-
-        //placing SE
-        if (marker.transform.position.y + wallCoordinate > wallCoordinate - marker.transform.position.x) {
-            SE.transform.position = S.transform.position + new Vector3(0, marker.transform.position.y + wallCoordinate, 0);
-        }
-        else {
-            SE.transform.position = E.transform.position + new Vector3(wallCoordinate - marker.transform.position.x, 0, 0);
-        }
-
-        //placing SW (TODO)
     }
 
     RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively), raycasts for what's ahead and places the marker for the AI
@@ -52,24 +36,60 @@ public class cycleMovement : MonoBehaviour {
             cycle.transform.eulerAngles = new Vector3(0, 0, 90); //turn up
             cycle.transform.position = new Vector3(Mathf.Round(cycle.transform.position.x), cycle.transform.position.y, 0);
             marker.transform.position = cycle.transform.position + new Vector3(0, 1, 0);
+
+            //calling processes for the AI
+            if (player == 1 && !processing.GetComponent<background>().player1IsHuman) {
+                placeMarkers();
+            }
+            else if (player == 2 && !processing.GetComponent<background>().player2IsHuman) {
+                placeMarkers();
+            }
+
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.up, 1);
         }
         else if (face == 2) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 270); //turn down
             cycle.transform.position = new Vector3(Mathf.Round(cycle.transform.position.x), cycle.transform.position.y, 0);
             marker.transform.position = cycle.transform.position + new Vector3(0, -1, 0);
+
+            //calling processes for the AI
+            if (player == 1 && !processing.GetComponent<background>().player1IsHuman) {
+                placeMarkers();
+            }
+            else if (player == 2 && !processing.GetComponent<background>().player2IsHuman) {
+                placeMarkers();
+            }
+
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.up * -1, 1);
         }
         else if (face == 3) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 180); //turn left
             cycle.transform.position = new Vector3(cycle.transform.position.x, Mathf.Round(cycle.transform.position.y), 0);
             marker.transform.position = cycle.transform.position + new Vector3(-1, 0, 0);
+
+            //calling processes for the AI
+            if (player == 1 && !processing.GetComponent<background>().player1IsHuman) {
+                placeMarkers();
+            }
+            else if (player == 2 && !processing.GetComponent<background>().player2IsHuman) {
+                placeMarkers();
+            }
+
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.left, 1);
         }
         else if (face == 4) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 0); //turn right
             cycle.transform.position = new Vector3(cycle.transform.position.x, Mathf.Round(cycle.transform.position.y), 0);
             marker.transform.position = cycle.transform.position + new Vector3(1, 0, 0);
+
+            //calling processes for the AI
+            if (player == 1 && !processing.GetComponent<background>().player1IsHuman) {
+                placeMarkers();
+            }
+            else if (player == 2 && !processing.GetComponent<background>().player2IsHuman) {
+                placeMarkers();
+            }
+
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.right, 1);
         }
         else {
@@ -77,13 +97,22 @@ public class cycleMovement : MonoBehaviour {
         }
     }
 
-    // Use this for initialization
-    void Start() {
-
-    }
-
     private void OnTriggerEnter2D(Collider2D collision) {
         trail = collision.gameObject;
+        trail.GetComponent<SpriteRenderer>().sprite = color; //Changes the trail to the proper color
+        trailX = Mathf.RoundToInt(trail.transform.position.x + gridSize); //sets the relative coordinates for the trail for use in our array
+        trailY = Mathf.RoundToInt(trail.transform.position.y + gridSize);
+    }
+
+    // Use this for initialization
+    void Start() {
+        cycle.GetComponent<AIControl>().trailMap = processing.GetComponent<gridStart>().trailMap;
+
+        for (int x = 0; x < gridSize * 2; x++) {
+            for (int y = 0; y < gridSize * 2; y++) {
+                Debug.Log(cycle.GetComponent<AIControl>().trailMap[x, y]);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -148,8 +177,8 @@ public class cycleMovement : MonoBehaviour {
                 }
             }
 
-            trail.GetComponent<SpriteRenderer>().sprite = color; //Changes the trail to the proper color
             trail.GetComponent<Renderer>().enabled = true; //Enables the trail
+            cycle.GetComponent<AIControl>().trailMap[trailX, trailY] = true;
         }
 
 
