@@ -37,7 +37,7 @@ public class background : MonoBehaviour {
         if (victor > 0) {
             gameActive = false;
 
-            if ((player1IsHuman || player2IsHuman) && !training) {
+            if ((player1IsHuman || player2IsHuman)) {
                 if (victor == 1) {
                     SceneManager.LoadScene("player 1 win");
                 }
