@@ -15,21 +15,9 @@ public class cycleMovement : MonoBehaviour {
     public int player, opponent; //The player and the opponent numbers
     public GameObject cycleOpponent; //The actual cycle of the opponent
     public bool hasHit = false; //If the opponent has hit something, preventing the reset of the victor value and preventing a collision
-    public GameObject marker, N, E, S, W; //The markers for AI processing
-    const int wallCoordinate = 45; //The constant coordinate for the wals
-    const int gridSize = 20;
-
-    private void placeMarkers() { //Function that places the markers onto the walls for AI processing
-        //initializing a couple variables to reduce fetching time
-        float mainMarkerX = marker.transform.position.x;
-        float mainMarkerY = marker.transform.position.y;
-
-        //placing the horizontal axis markers
-        N.transform.position = new Vector3(mainMarkerX, wallCoordinate, 0);
-        E.transform.position = new Vector3(wallCoordinate, mainMarkerY, 0);
-        S.transform.position = new Vector3(mainMarkerX, -wallCoordinate, 0);
-        W.transform.position = new Vector3(-wallCoordinate, mainMarkerY, 0);
-    }
+    public GameObject marker; //The markers for AI processing
+    const int gridSize = 44; //The size of the grid along each axis in 4 directions
+    const int wallCoordinate = gridSize + 1; //The constant coordinate for the wals
 
     RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively), raycasts for what's ahead and places the marker for the AI
         if (face == 1) {
@@ -39,10 +27,11 @@ public class cycleMovement : MonoBehaviour {
 
             //calling processes for the AI
             if (player == 1 && !processing.GetComponent<background>().player1IsHuman) {
-                placeMarkers();
+                cycle.GetComponent<AIControl>().getIn(cycle.transform.position, cycleOpponent.transform.position);
+
             }
             else if (player == 2 && !processing.GetComponent<background>().player2IsHuman) {
-                placeMarkers();
+                cycle.GetComponent<AIControl>().getIn(cycle.transform.position, cycleOpponent.transform.position);
             }
 
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.up, 1);
@@ -54,10 +43,10 @@ public class cycleMovement : MonoBehaviour {
 
             //calling processes for the AI
             if (player == 1 && !processing.GetComponent<background>().player1IsHuman) {
-                placeMarkers();
+                cycle.GetComponent<AIControl>().getIn(cycle.transform.position, cycleOpponent.transform.position);
             }
             else if (player == 2 && !processing.GetComponent<background>().player2IsHuman) {
-                placeMarkers();
+                cycle.GetComponent<AIControl>().getIn(cycle.transform.position, cycleOpponent.transform.position);
             }
 
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.up * -1, 1);
@@ -69,10 +58,10 @@ public class cycleMovement : MonoBehaviour {
 
             //calling processes for the AI
             if (player == 1 && !processing.GetComponent<background>().player1IsHuman) {
-                placeMarkers();
+                cycle.GetComponent<AIControl>().getIn(cycle.transform.position, cycleOpponent.transform.position);
             }
             else if (player == 2 && !processing.GetComponent<background>().player2IsHuman) {
-                placeMarkers();
+                cycle.GetComponent<AIControl>().getIn(cycle.transform.position, cycleOpponent.transform.position);
             }
 
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.left, 1);
@@ -84,10 +73,10 @@ public class cycleMovement : MonoBehaviour {
 
             //calling processes for the AI
             if (player == 1 && !processing.GetComponent<background>().player1IsHuman) {
-                placeMarkers();
+                cycle.GetComponent<AIControl>().getIn(cycle.transform.position, cycleOpponent.transform.position);
             }
             else if (player == 2 && !processing.GetComponent<background>().player2IsHuman) {
-                placeMarkers();
+                cycle.GetComponent<AIControl>().getIn(cycle.transform.position, cycleOpponent.transform.position);
             }
 
             return Physics2D.RaycastAll(cycle.transform.position, Vector3.right, 1);
@@ -107,12 +96,6 @@ public class cycleMovement : MonoBehaviour {
     // Use this for initialization
     void Start() {
         cycle.GetComponent<AIControl>().trailMap = processing.GetComponent<gridStart>().trailMap;
-
-        for (int x = 0; x < gridSize * 2; x++) {
-            for (int y = 0; y < gridSize * 2; y++) {
-                Debug.Log(cycle.GetComponent<AIControl>().trailMap[x, y]);
-            }
-        }
     }
 
     // Update is called once per frame

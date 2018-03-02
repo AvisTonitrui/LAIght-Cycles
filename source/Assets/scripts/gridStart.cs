@@ -9,7 +9,7 @@ public class gridStart : MonoBehaviour {
     public const int gridSize = 44;
     public List<GameObject> map= new List<GameObject>();
     Transform listMap;
-    public bool[,] trailMap = new bool[gridSize * 2, gridSize * 2];
+    public bool[,] trailMap = new bool[(gridSize * 2 + 1), (gridSize * 2) + 1];
 
     // Use this for initialization
     void Start() {
@@ -22,8 +22,8 @@ public class gridStart : MonoBehaviour {
 
         }
 
-        for (int x = 0; x < gridSize * 2; x++) {
-            for (int y = 0; y < gridSize * 2; y++) {
+        for (int x = 0; x < (gridSize * 2) + 1; x++) {
+            for (int y = 0; y < (gridSize * 2) + 1; y++) {
                 trailMap[x, y] = false;
             }
         }
