@@ -286,6 +286,8 @@ public class AIControl : MonoBehaviour { //This class takes the weights from an 
                 direction = i;
             }
 
+            Debug.Log(outp);
+
             i++;
         }
 
