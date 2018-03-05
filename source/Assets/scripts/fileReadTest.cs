@@ -18,7 +18,7 @@ public class fileReadTest : MonoBehaviour {
 
             //Continue to read until you reach end of file
             while (line != null) {
-                //write the lie to console window
+                //write the line to console window
                 Debug.Log(line);
                 //Read the next line
                 line = sr.ReadLine();
