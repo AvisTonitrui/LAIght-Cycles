@@ -14,6 +14,7 @@ public class background : MonoBehaviour {
     void Start() {
         if (player1IsHuman) {
             player1.GetComponent<AIControl>().enabled = false;
+            player1.GetComponent<saveReader>().enabled = false;
         }
         else {
             player1.GetComponent<humanControl>().enabled = false;
@@ -21,6 +22,7 @@ public class background : MonoBehaviour {
 
         if (player2IsHuman) {
             player2.GetComponent<AIControl>().enabled = false;
+            player2.GetComponent<saveReader>().enabled = false;
         }
         else {
             player2.GetComponent<humanControl>().enabled = false;
