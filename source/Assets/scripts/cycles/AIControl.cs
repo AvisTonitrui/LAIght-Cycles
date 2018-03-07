@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AIControl : MonoBehaviour { //This class takes the weights from an organism and uses it for controlling the cycle
 
-    public float[] weights = new float[392]; //The wieghts specified by the organism
+    public float[] weights = new float[393]; //The weights specified by the organism, with its score at the end
     float[] inputs = new float[24]; //The inputs, which change at each gridpoint
     float[] hiddens = new float[14]; //The hidden neurons
     float[] outputs = new float[4]; //The output neurons
@@ -256,7 +256,7 @@ public class AIControl : MonoBehaviour { //This class takes the weights from an 
         int ou = 0;
 
         //iterate through the weights that go from hiddens to outputs
-        for (int i = 336; i < weights.Length; i++) {
+        for (int i = 336; i < 392; i++) {
             //checking if it's time to go to the next hidden node
             if ((i) % 4 == 0) {
                 hid++;

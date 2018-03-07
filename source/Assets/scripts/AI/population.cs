@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class population : MonoBehaviour { //This script is for controlling the genetic algorithm, both population and breeding/eliminating
 
-    public float[][] isos = new float[99][]; //The entire population for this generation
-    public string[] isoInfo = new string[99]; //The info on each of the isos in the population (Format: "W/L,survived tiles,random number,organism#")
+    public float[][] isos = new float[99][]; //The entire population for this generation. Each has a score in the following format ((W/L) * Tiles Survived * R) a win is 2, a loss is 1, R is a random number between 1 and 1.1 
     public int gen; //The generation number, for ducumenting purposes
     public bool save = false; //Wehther we're loading a save or starting from the beginning
     public bool ready = false; //Whether the population is ready to begin or not
@@ -15,6 +14,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
     int org = 0; //the index of the organism we're on
     public GameObject cycle; //The cycle this script is attached to
     public string saveName;
+    const int SCOREINDEX = 392; //The index that the score is kept at
 
     //Function that makes a randomly generated population from scratch
     void makePop() {
@@ -32,7 +32,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
         StreamReader save = new StreamReader("Saves/" + saveName + ".txt"); //The save file opened for reading
         int organism = 0; //index marker while reading the file
         float[][] saveList = new float[99][]; //The placeholder for the save file
-        float[] iso = new float[392]; //The organism
+        float[] iso = new float[393]; //The organism
         string[] isoString; //The organism still in string form
 
         /* Save file format:
@@ -82,103 +82,107 @@ public class population : MonoBehaviour { //This script is for controlling the g
     }
 
     //compares two isos' info to determine which is better. True is iso 1, False is iso 2
-    public bool compareInfo(string iso1Info, string iso2Info) {
-        //the factors; 0 is a tie, 1 is iso 1, 2 is iso 2
-        int factor1 = 0;
-        int factor2 = 0;
-        int factor3 = 0;
-
-        //the number of victories per side
-        int vic1 = 0;
-        int vic2 = 0;
-
-        //each factor split for easier parsing
-        string[] iso1 = iso1Info.Split(',');
-        string[] iso2 = iso2Info.Split(',');
-
-        //evaluating factor1, which is whether the iso won or not
-        if (iso1[0] == "W" && iso2[0] != "W") {
-            factor1 = 1;
-            vic1 += 1;
-        }
-        else if (iso1[0] != "W" && iso2[0] == "W") {
-            factor1 = 2;
-            vic2 += 1;
-        }
-        else {
-            factor1 = 0;
-        }
-
-        //evaluating factor2, how long many tiles they survived
-        if (int.Parse(iso1[1]) > int.Parse(iso2[1])) {
-            factor2 = 1;
-            vic1 += 1;
-        }
-        else if (int.Parse(iso1[1]) < int.Parse(iso2[1])) {
-            factor2 = 2;
-            vic2 += 1;
-        }
-        else {
-            factor2 = 0;
-        }
-
-        //evaluating factor3, a randomly generated number between 0 and 1 used as a tiebreaker and to simulate a degree of randomness
-        if (int.Parse(iso1[2]) > int.Parse(iso2[2])) {
-            factor3 = 1;
-            vic1 += 1;
-        }
-        else if (int.Parse(iso1[2]) < int.Parse(iso1[2])) {
-            factor3 = 2;
-            vic2 += 1;
-        }
-        else {
-            factor3 = 0;
-        }
-
-        //checking if one side one by majority, and returning the victor if so
-        if (vic1 > vic2) {
-            return true;
-        }
-        else if (vic1 < vic2) {
-            return false;
-        }
-
-        //the tiebreaker, checking through each factor in order of priority and seeing who won the highest priority. 1 wins if everything tied
-        if (factor1 == 1) {
-            return true;
-        }
-        else if (factor1 == 2) {
-            return false;
-        }
-        else if (factor2 == 1) {
-            return true;
-        }
-        else if (factor2 == 2) {
-            return false;
-        }
-        else if (factor3 == 1) {
-            return true;
-        }
-        else if (factor3 == 2) {
-            return false;
-        }
-        else {
-            return true;
-        }
-
+    bool compareInfo(float[] iso1, float[] iso2) {
+        return iso1[SCOREINDEX] >= iso2[SCOREINDEX];
     }
 
-    //sorts the isos, using 
+    List<float[]> merge(List<float[]> hold1, List<float[]> hold2, int mergeSize) {
+        List<float[]> mergeHold = new List<float[]>(); //The merged list
+        int mergeLength = hold1.Count + hold2.Count; //The total length that mergeHold should be
+        int i1 = 0;
+        int i2 = mergeSize;
+
+        //if hold2 is empty, we can just return hold1 as it is already sorted
+        if (hold2.Count == 0) {
+            return hold1;
+        }
+
+        while (i2 < mergeLength) {
+            //sorting one by one
+            if (compareInfo(hold1[i1], hold2[i2])) {
+                mergeHold.Add(hold1[i1]);
+                i1++;
+            }
+            else {
+                mergeHold.Add(hold2[i2 - mergeSize]);
+                i2++;
+            }
+
+            //adding the rest of 2 once 1 is finished
+            if (i1 == mergeSize) {
+                //adding the remainder of 2
+                for (int i = i2 - mergeSize; i < hold2.Count; i++) {
+                    mergeHold.Add(hold2[i2 - mergeSize]);
+                    i2++;
+                }
+            }
+
+            //adding the rest of 1 if 2 finished
+            if (i2 == mergeLength) {
+                //adding the remainder of 1
+                for (int i = i1; i < hold1.Count; i++) {
+                    mergeHold.Add(hold2[i1]);
+                    i1++;
+                }
+            }
+        }
+
+        return mergeHold;
+    }
+
+    //sorts the isos using merge sort
     public float[][] sortIsos(float[][] isoList, string[] info) {
         //variable declarations for the function
-        string[] hold1 = info;
-        string[] hold2 = new string[99];
-        float[][] myReturn;
+        List<float[]> hold1 = new List<float[]>(); //Holders for performing merges
+        List<float[]> hold2 = new List<float[]>();
+        List<float[]> mergeHold = new List<float[]>();
+        float[][] myReturn = isoList; //What will get returned at the end of the sort
+        int mergeSize = 1;//The size of the groups for the merge
+
+        //looping until our mergesize is the whole of the population
+        do {
+            //going through all of the array and performing the sort
+            for (int i = 0; i < myReturn.Length; i++) {
+                //first add to the holds if they're not full yet
+                if (hold1.Count < mergeSize) {
+                    hold1.Add(myReturn[i]);
+                }
+                else if (hold2.Count < mergeSize) {
+                    hold2.Add(myReturn[i]);
+                }
+                else { //Perform a merge and start filling out the next set of holds afterwards
+                    mergeHold = merge(hold1, hold2, mergeSize); //Gets the merged version of the segment we're on
+
+                    //puts the merged segment into the array
+                    int j = i - (mergeSize * 2);
+                    foreach (float[] iso in mergeHold) {
+                        myReturn[j] = iso;
+                        j++;
+                    }
+
+                    //error debug
+                    if (j != i) {
+                        Debug.Log("problem j");
+                    }
+
+                    //clearing the holds and adding the current iteration to hold1
+                    hold1 = new List<float[]>();
+                    hold2 = new List<float[]>();
+                    hold1.Add(myReturn[i]);
+                }
+
+                //checking to see if this is the last element, therefore requiring a final merge and incrementing mergeSize
+                if (i + 1 == myReturn.Length) {
+                    mergeHold = merge(hold1, hold2, mergeSize);
+                    mergeSize = mergeSize * 2;
+                }
+            }
+
+        } while (mergeSize < isoList.Length);
 
 
-
-        //dummy return to stop the hassle
-        return new float[392][];
+        //return the sorted array
+        return myReturn;
     }
 
     //creates the next generation and resets needed variables
@@ -190,7 +194,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
     void Start() {
         //fills out isos with declared arrays
         for (int i = 0; i < isos.Length; i++) {
-            isos[i] = new float[392];
+            isos[i] = new float[393];
         }
 
     }
