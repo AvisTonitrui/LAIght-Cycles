@@ -61,7 +61,8 @@ public class population : MonoBehaviour { //This script is for controlling the g
             organism++;
             line = save.ReadLine();
         }
-
+        //closing the file before returning
+        save.Close();
         return saveList;
     }
 
@@ -226,6 +227,35 @@ public class population : MonoBehaviour { //This script is for controlling the g
         gen++; //Incrementing the generation number
         org = 0; //Resetting the organism count
         nextGen = false;
+    }
+
+    //writes to the designated save file
+    public void savePop() {
+        StreamWriter file = new StreamWriter("Saves/" + saveName + ".txt"); //The save file opened for writing
+
+        //write the gen number
+        file.WriteLine(gen);
+
+        //write each of the isos on a separate line
+        foreach (float[] iso in isos) {
+            string line = ""; //Resetting the line
+
+            //adding to the line
+            for (int i = 0; i < iso.Length - 1; i++) {
+                if (i + 1 != iso.Length - 1) {
+                    line += iso[i].ToString() + ",";
+                }
+                else {
+                    line += iso[i].ToString();
+                }
+            }
+
+            //writing the line
+            file.WriteLine(line);
+        }
+
+        //closing before the function finishes
+        file.Close();
     }
 
     // Use this for initialization
