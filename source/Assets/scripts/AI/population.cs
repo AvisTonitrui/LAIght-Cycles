@@ -8,9 +8,10 @@ public class population : MonoBehaviour { //This script is for controlling the g
     public float[][] isos = new float[99][]; //The entire population for this generation. Each has a score in the following format ((W/L) * Tiles Survived * R) a win is 2, a loss is 1, R is a random number between 1 and 1.1 
     public int gen; //The generation number, for ducumenting purposes
     public bool save = false; //Wehther we're loading a save or starting from the beginning
-    public bool ready = false; //Whether the population is ready to begin or not
-    public bool nextIso = true; //Whether to continue to the next organism or not
-    public bool nextGen = false; //Indicator to to calculations for the next generation
+    public bool nextIso = false; //Whether to continue to the next organism or not
+    public bool nextGen = false; //Indicator to do calculations for the next generation
+    public bool simComplete = false; //Turns true when the current simulation ends
+    public bool ready = false; //Lets processing know that AI is prepped for the next simulation
     int org = 0; //the index of the organism we're on
     public GameObject cycle; //The cycle this script is attached to
     public string saveName;
@@ -73,7 +74,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
             makePop();
         }
 
-        ready = true;
+        nextIso = true;
     }
 
     //passes the weights to AI Control
@@ -131,7 +132,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
     }
 
     //sorts the isos using merge sort
-    public float[][] sortIsos(float[][] isoList, string[] info) {
+    float[][] sortIsos(float[][] isoList) {
         //variable declarations for the function
         List<float[]> hold1 = new List<float[]>(); //Holders for performing merges
         List<float[]> hold2 = new List<float[]>();
@@ -174,6 +175,14 @@ public class population : MonoBehaviour { //This script is for controlling the g
                 //checking to see if this is the last element, therefore requiring a final merge and incrementing mergeSize
                 if (i + 1 == myReturn.Length) {
                     mergeHold = merge(hold1, hold2, mergeSize);
+
+                    //putting the final merge into the return
+                    int j = i - (mergeSize * 2);
+                    foreach (float[] iso in mergeHold) {
+                        myReturn[j] = iso;
+                        j++;
+                    }
+
                     mergeSize = mergeSize * 2;
                 }
             }
@@ -185,9 +194,38 @@ public class population : MonoBehaviour { //This script is for controlling the g
         return myReturn;
     }
 
+    //breeds two Isos by averaging their values and possibly causing a mutation
+    float[] breedIsos(float[] iso1, float[] iso2) {
+        float[] isoSpawn = new float[393];
+
+        for (int i = 0; i < isoSpawn.Length; i++) {
+            isoSpawn[i] = (iso1[i] + iso2[i]) / 2;
+
+            //mutation check
+            if (Random.value >= 0.95) {
+                isoSpawn[i] = isoSpawn[i] * (Random.value + 2) / 2.5f;
+            }
+        }
+
+        return isoSpawn;
+    }
+
     //creates the next generation and resets needed variables
     public void newGen() {
+        //ranking each Iso
+        isos = sortIsos(isos);
 
+        int j = 0; //Second index marker
+
+        //breeding and replacing the bottom third
+        for (int i = isos.Length * 2 / 3; i < isos.Length; i++) {
+            isos[i] = breedIsos(isos[j], isos[j + 1]);
+            j += 2;
+        }
+
+        gen++; //Incrementing the generation number
+        org = 0; //Resetting the organism count
+        nextGen = false;
     }
 
     // Use this for initialization
@@ -203,9 +241,25 @@ public class population : MonoBehaviour { //This script is for controlling the g
     void Update() {
         //gives AI control the next organism
         if (nextIso) {
-            quorra(org);
+            cycle.GetComponent<AIControl>().weights = quorra(org);
             org++;
             nextIso = false;
+            ready = true;
+        }
+
+        //stuff to run when the current simulation finishes
+        if (simComplete) {
+            nextIso = true;
+
+            if (org == isos.Length) {
+                nextGen = true;
+            }
+            ready = false;
+            simComplete = false;
+        }
+
+        if (nextGen) {
+            newGen();
         }
 
     }
