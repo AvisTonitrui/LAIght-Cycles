@@ -85,7 +85,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\scripts\AI\population.cs" />
-    <Compile Include="Assets\scripts\AI\saveWriter.cs" />
     <Compile Include="Assets\scripts\background.cs" />
     <Compile Include="Assets\scripts\cycles\AIControl.cs" />
     <Compile Include="Assets\scripts\cycles\cycleMovement.cs" />

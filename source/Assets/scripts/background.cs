@@ -31,15 +31,19 @@ public class background : MonoBehaviour {
         if (player1IsHuman && player2IsHuman) {
             training = false;
         }
+
+        if (!player1IsHuman && !player2IsHuman) {
+            training = true;
+        }
     }
 
     // Update is called once per frame
     void Update() {
-        //Debug.Log(victor);
+
+        //this means that the simulation is over, if training, stuff will occur for the next session
         if (victor > 0) {
             gameActive = false;
-
-            if ((player1IsHuman || player2IsHuman)) {
+            if ((!training)) {
                 if (victor == 1) {
                     SceneManager.LoadScene("player 1 win");
                 }
@@ -49,6 +53,9 @@ public class background : MonoBehaviour {
                 else {
                     SceneManager.LoadScene("tie");
                 }
+            }
+            else {
+
             }
         }
     }

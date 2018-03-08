@@ -18,6 +18,7 @@ public class cycleMovement : MonoBehaviour {
     public GameObject marker; //The markers for AI processing
     const int gridSize = 44; //The size of the grid along each axis in 4 directions
     const int wallCoordinate = gridSize + 1; //The constant coordinate for the wals
+    int tiles = 0; //the number of tiles that the cycle has moved, used for AI
 
     RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively), raycasts for what's ahead and places the marker for the AI
         if (face == 1) {
@@ -121,9 +122,8 @@ public class cycleMovement : MonoBehaviour {
         if (Mathf.Approximately(cycle.transform.position.x % 1, 0) && Mathf.Approximately(cycle.transform.position.y % 1, 0)) { //Checks if cycle is on a grid point
             RaycastHit2D[] hits; //The variable for what raycasts hit
             hits = turn(direction); //Turns the cycle in the last direction it was given
+
             //These are the controls to make sure that the square the cycle is heading into is legal
-
-
             if (hits.Length != 0 && processing.GetComponent<background>().gameActive == true) {
                 //Debug.Log("Hit");
                 int winner = 0;
@@ -162,6 +162,7 @@ public class cycleMovement : MonoBehaviour {
 
             trail.GetComponent<Renderer>().enabled = true; //Enables the trail
             cycle.GetComponent<AIControl>().trailMap[trailX, trailY] = true;
+            tiles++;
         }
 
 
