@@ -18,7 +18,7 @@ public class cycleMovement : MonoBehaviour {
     public GameObject marker; //The markers for AI processing
     const int gridSize = 44; //The size of the grid along each axis in 4 directions
     const int wallCoordinate = gridSize + 1; //The constant coordinate for the wals
-    int tiles = 0; //the number of tiles that the cycle has moved, used for AI
+    public int tiles = 0; //the number of tiles that the cycle has moved, used for AI
 
     RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively), raycasts for what's ahead and places the marker for the AI
         if (face == 1) {
@@ -94,6 +94,12 @@ public class cycleMovement : MonoBehaviour {
         trailY = Mathf.RoundToInt(trail.transform.position.y + gridSize);
     }
 
+    //restarts for the next simulation
+    public void restart() {
+        processing.GetComponent<gridStart>().restart();
+        cycle.GetComponent<AIControl>().trailMap = processing.GetComponent<gridStart>().trailMap;
+    }
+
     // Use this for initialization
     void Start() {
         cycle.GetComponent<AIControl>().trailMap = processing.GetComponent<gridStart>().trailMap;
@@ -160,11 +166,12 @@ public class cycleMovement : MonoBehaviour {
                 }
             }
 
-            trail.GetComponent<Renderer>().enabled = true; //Enables the trail
-            cycle.GetComponent<AIControl>().trailMap[trailX, trailY] = true;
-            tiles++;
+            if (processing.GetComponent<background>().gameActive) {
+                tiles++; //used for survival score portion of AI
+                trail.GetComponent<Renderer>().enabled = true; //Enables the trail
+                cycle.GetComponent<AIControl>().trailMap[trailX, trailY] = true; //used for AI interaction
+            }
         }
-
 
     }
 }

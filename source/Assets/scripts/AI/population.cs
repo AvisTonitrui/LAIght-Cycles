@@ -12,7 +12,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
     public bool nextGen = false; //Indicator to do calculations for the next generation
     public bool simComplete = false; //Turns true when the current simulation ends
     public bool ready = false; //Lets processing know that AI is prepped for the next simulation
-    int org = 0; //the index of the organism we're on
+    public int org = 0; //the index of the organism we're on
     public GameObject cycle; //The cycle this script is attached to
     public string saveName;
     const int SCOREINDEX = 392; //The index that the score is kept at
@@ -94,6 +94,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
         int i1 = 0;
         int i2 = mergeSize;
 
+
         //if hold2 is empty, we can just return hold1 as it is already sorted
         if (hold2.Count == 0) {
             return hold1;
@@ -101,7 +102,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
         while (i2 < mergeLength) {
             //sorting one by one
-            if (compareInfo(hold1[i1], hold2[i2])) {
+            if (compareInfo(hold1[i1], hold2[i2 - mergeSize])) {
                 mergeHold.Add(hold1[i1]);
                 i1++;
             }
@@ -123,7 +124,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
             if (i2 == mergeLength) {
                 //adding the remainder of 1
                 for (int i = i1; i < hold1.Count; i++) {
-                    mergeHold.Add(hold2[i1]);
+                    mergeHold.Add(hold1[i1]);
                     i1++;
                 }
             }
@@ -140,6 +141,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
         List<float[]> mergeHold = new List<float[]>();
         float[][] myReturn = isoList; //What will get returned at the end of the sort
         int mergeSize = 1;//The size of the groups for the merge
+        int j = 0; //the index of the beginning
 
         //looping until our mergesize is the whole of the population
         do {
@@ -154,9 +156,9 @@ public class population : MonoBehaviour { //This script is for controlling the g
                 }
                 else { //Perform a merge and start filling out the next set of holds afterwards
                     mergeHold = merge(hold1, hold2, mergeSize); //Gets the merged version of the segment we're on
+                    Debug.Log(mergeSize);
 
                     //puts the merged segment into the array
-                    int j = i - (mergeSize * 2);
                     foreach (float[] iso in mergeHold) {
                         myReturn[j] = iso;
                         j++;
@@ -171,6 +173,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
                     hold1 = new List<float[]>();
                     hold2 = new List<float[]>();
                     hold1.Add(myReturn[i]);
+                    j = i;
                 }
 
                 //checking to see if this is the last element, therefore requiring a final merge and incrementing mergeSize
@@ -178,13 +181,13 @@ public class population : MonoBehaviour { //This script is for controlling the g
                     mergeHold = merge(hold1, hold2, mergeSize);
 
                     //putting the final merge into the return
-                    int j = i - (mergeSize * 2);
                     foreach (float[] iso in mergeHold) {
                         myReturn[j] = iso;
                         j++;
                     }
 
                     mergeSize = mergeSize * 2;
+                    j = 0;
                 }
             }
 
@@ -265,12 +268,14 @@ public class population : MonoBehaviour { //This script is for controlling the g
             isos[i] = new float[393];
         }
 
+        readyUp();
+
     }
 
     // Update is called once per frame
     void Update() {
         //gives AI control the next organism
-        if (nextIso) {
+        if (nextIso && !nextGen) {
             cycle.GetComponent<AIControl>().weights = quorra(org);
             org++;
             nextIso = false;
