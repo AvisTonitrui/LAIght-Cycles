@@ -166,10 +166,12 @@ public class cycleMovement : MonoBehaviour {
                 }
             }
 
+            trail.GetComponent<Renderer>().enabled = true; //Enables the trail
+            cycle.GetComponent<AIControl>().trailMap[trailX, trailY] = true; //used for AI interaction
+
             if (processing.GetComponent<background>().gameActive) {
                 tiles++; //used for survival score portion of AI
-                trail.GetComponent<Renderer>().enabled = true; //Enables the trail
-                cycle.GetComponent<AIControl>().trailMap[trailX, trailY] = true; //used for AI interaction
+                
             }
         }
 
