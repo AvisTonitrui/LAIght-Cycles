@@ -91,9 +91,9 @@ public class population : MonoBehaviour { //This script is for controlling the g
     List<float[]> merge(List<float[]> hold1, List<float[]> hold2, int mergeSize) {
         List<float[]> mergeHold = new List<float[]>(); //The merged list
         int mergeLength = hold1.Count + hold2.Count; //The total length that mergeHold should be
-        Debug.Log("Hold 1: " + hold1.Count.ToString());
-        Debug.Log("Hold 2: " + hold2.Count.ToString());
-        Debug.Log("Merge length: " + mergeLength.ToString());
+        //Debug.Log("Hold 1: " + hold1.Count.ToString());
+        //Debug.Log("Hold 2: " + hold2.Count.ToString());
+        //Debug.Log("Merge length: " + mergeLength.ToString());
         int i1 = 0;
         int i2 = mergeSize;
 
@@ -148,15 +148,17 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
         //looping until our mergesize is the whole of the population
         do {
-            Debug.Log("Merge size: " + mergeSize.ToString());
+           //Debug.Log("Merge size: " + mergeSize.ToString());
 
             //going through all of the array and performing the sort
             for (int i = 0; i < myReturn.Length; i++) {
                 //first add to the holds if they're not full yet
                 if (hold1.Count < mergeSize) {
+                    //Debug.Log("Adding to Hold1, now at " + hold1.Count.ToString());
                     hold1.Add(myReturn[i]);
                 }
                 else if (hold2.Count < mergeSize) {
+                    //Debug.Log("Adding to Hold2, now at " + hold2.Count.ToString());
                     hold2.Add(myReturn[i]);
                 }
                 else { //Perform a merge and start filling out the next set of holds afterwards
@@ -175,15 +177,15 @@ public class population : MonoBehaviour { //This script is for controlling the g
                     }
 
                     //clearing the holds and adding the current iteration to hold1
-                    hold1 = new List<float[]>();
-                    hold2 = new List<float[]>();
+                    hold1.Clear();
+                    hold2.Clear();
                     hold1.Add(myReturn[i]);
                     j = i;
                 }
 
                 //checking to see if this is the last element, therefore requiring a final merge and incrementing mergeSize
                 if (i + 1 == myReturn.Length) {
-                    Debug.Log("Final Merge");
+                    //Debug.Log("Final Merge");
                     mergeHold = merge(hold1, hold2, mergeSize);
 
                     //putting the final merge into the return
@@ -192,6 +194,8 @@ public class population : MonoBehaviour { //This script is for controlling the g
                         j++;
                     }
 
+                    hold1.Clear();
+                    hold2.Clear();
                     mergeSize = mergeSize * 2;
                     j = 0;
                 }

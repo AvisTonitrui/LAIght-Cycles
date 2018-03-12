@@ -8,7 +8,7 @@ public class cycleMovement : MonoBehaviour {
     public int direction; //This is an int which determines which direction the cycle will go
     private const float speed = 0.25f; //The speed of the cycle, which is constant but will need testing
     public GameObject cycle; //The cycle te script is attached to
-    GameObject trail; //The trail of the cycle
+    public GameObject trail; //The trail of the cycle
     int trailX, trailY; //the position of the trail
     public Sprite color; //The sprite that chooses the color of the trail
     public GameObject processing; //The background processing
@@ -21,6 +21,20 @@ public class cycleMovement : MonoBehaviour {
     public int tiles = 0; //the number of tiles that the cycle has moved, used for AI
 
     RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively), raycasts for what's ahead and places the marker for the AI
+        //resets face if it's the opposite direction to what it is currently facing, in order to prevent backtracking/instant death
+        if (face == 1 && cycle.transform.eulerAngles == new Vector3(0, 0, 270)) {
+            face = 2;
+        }
+        else if (face == 2 && cycle.transform.eulerAngles == new Vector3(0, 0, 90)) {
+            face = 1;
+        }
+        else if (face == 3 && cycle.transform.eulerAngles == new Vector3(0, 0, 0)) {
+            face = 4;
+        }
+        else if (face == 4 && cycle.transform.eulerAngles == new Vector3(0, 0, 180)) {
+            face = 3;
+        }
+
         if (face == 1) {
             cycle.transform.eulerAngles = new Vector3(0, 0, 90); //turn up
             cycle.transform.position = new Vector3(Mathf.Round(cycle.transform.position.x), cycle.transform.position.y, 0);
@@ -106,7 +120,7 @@ public class cycleMovement : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void LateUpdate() {
         //Keeps the cycle moving
         if (processing.GetComponent<background>().gameActive == true) {
             cycle.transform.position = Vector3.MoveTowards(cycle.transform.position, cycle.transform.position + cycle.transform.right, speed); //Constantly moves the cycle forward
@@ -166,12 +180,10 @@ public class cycleMovement : MonoBehaviour {
                 }
             }
 
-            trail.GetComponent<Renderer>().enabled = true; //Enables the trail
-            cycle.GetComponent<AIControl>().trailMap[trailX, trailY] = true; //used for AI interaction
-
             if (processing.GetComponent<background>().gameActive) {
                 tiles++; //used for survival score portion of AI
-                
+                trail.GetComponent<Renderer>().enabled = true; //Enables the trail
+                cycle.GetComponent<AIControl>().trailMap[trailX, trailY] = true; //used for AI interaction
             }
         }
 
