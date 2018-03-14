@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class background : MonoBehaviour {
 
@@ -9,33 +10,8 @@ public class background : MonoBehaviour {
     public int victor = 0; //The victor: 0 means no victor yet, 1 and 2 to respective players, 3 is a tie
     public bool player1IsHuman, player2IsHuman, training; //whether certain players are human and whether or not in training
     public GameObject player1, player2; //The players
-
-    // Use this for initialization
-    void Start() {
-        if (player1IsHuman) {
-            player1.GetComponent<AIControl>().enabled = false;
-            player1.GetComponent<population>().enabled = false;
-        }
-        else {
-            player1.GetComponent<humanControl>().enabled = false;
-        }
-
-        if (player2IsHuman) {
-            player2.GetComponent<AIControl>().enabled = false;
-            player2.GetComponent<population>().enabled = false;
-        }
-        else {
-            player2.GetComponent<humanControl>().enabled = false;
-        }
-
-        if (player1IsHuman && player2IsHuman) {
-            training = false;
-        }
-
-        if (!player1IsHuman && !player2IsHuman) {
-            training = true;
-        }
-    }
+    public GameObject player1Controls, player2Controls; //The parents for the text boxes showing the controls
+    public bool loaded;
 
     void restart() {
         //Debug.Log("Running Restart");
@@ -54,6 +30,44 @@ public class background : MonoBehaviour {
         player1.GetComponent<cycleMovement>().trail = null;
         player2.GetComponent<cycleMovement>().trail = null;
         victor = 0; //resetting victor
+    }
+
+    void setAIUI() {
+
+    }
+
+    // Use this for initialization
+    void Start() {
+        if (player1IsHuman) {
+            player1.GetComponent<AIControl>().enabled = false; //disabling Ai controls
+            player1.GetComponent<population>().enabled = false;
+            //enabling control text showing
+            foreach (Text control in player1Controls.GetComponentsInChildren<Text>()) {
+                control.enabled = true;
+            }
+        }
+        else {
+            player1.GetComponent<humanControl>().enabled = false;
+        }
+
+        if (player2IsHuman) {
+            player2.GetComponent<AIControl>().enabled = false;
+            player2.GetComponent<population>().enabled = false;
+            foreach (Text control in player2Controls.GetComponentsInChildren<Text>()) {
+                control.enabled = true;
+            }
+        }
+        else {
+            player2.GetComponent<humanControl>().enabled = false;
+        }
+
+        if (player1IsHuman && player2IsHuman) {
+            training = false;
+        }
+
+        if (!player1IsHuman && !player2IsHuman) {
+            training = true;
+        }
     }
 
     // Update is called once per frame
