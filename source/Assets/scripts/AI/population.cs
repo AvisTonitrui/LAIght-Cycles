@@ -2,20 +2,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text.RegularExpressions; // needed for Regex
+using UnityEngine.UI;
 
 public class population : MonoBehaviour { //This script is for controlling the genetic algorithm, both population and breeding/eliminating
 
     public float[][] isos = new float[99][]; //The entire population for this generation. Each has a score in the following format ((W/L) * Tiles Survived * R) a win is 2, a loss is 1, R is a random number between 1 and 1.1 
-    public int gen; //The generation number, for ducumenting purposes
-    public bool save = false; //Wehther we're loading a save or starting from the beginning
+    public int gen = 0; //The generation number, for ducumenting purposes
     public bool nextIso = false; //Whether to continue to the next organism or not
     public bool nextGen = false; //Indicator to do calculations for the next generation
     public bool simComplete = false; //Turns true when the current simulation ends
     public bool ready = false; //Lets processing know that AI is prepped for the next simulation
     public int org = 0; //the index of the organism we're on
     public GameObject cycle; //The cycle this script is attached to
-    public string saveName;
+    string saveName; //The name of the save file
     const int SCOREINDEX = 392; //The index that the score is kept at
+    public GameObject input1, input2; //The input for the save file name
+    public bool loaded = false; //To show that we currently have a loaded file in
+
+    //function for sanitizing input for save names
+    string sanitize(string given) {
+        string output = given;
+
+        output = Regex.Replace(output, @"[^a-zA-Z0-9 -_]", "");
+        output = Regex.Replace(output, @"[^a-zA-Z0-9-_]", "-");
+
+        return output;
+    }
+
+    //function for deloading for the button to activate
+    public void deLoad() {
+        loaded = false;
+        nextIso = false;
+        nextGen = false;
+        ready = false;
+        org = 0;
+        gen = 0;
+    }
 
     //Function that makes a randomly generated population from scratch
     void makePop() {
@@ -28,7 +51,8 @@ public class population : MonoBehaviour { //This script is for controlling the g
     }
 
     //parses the save file to get the population and the generation number
-    float[][] parseSave() {
+    void parseSave() {
+        saveName = sanitize(input1.GetComponent<InputField>().text);
         string line;//The line we're on
         StreamReader save = new StreamReader("Saves/" + saveName + ".txt"); //The save file opened for reading
         int organism = 0; //index marker while reading the file
@@ -63,11 +87,11 @@ public class population : MonoBehaviour { //This script is for controlling the g
         }
         //closing the file before returning
         save.Close();
-        return saveList;
+        isos = saveList;
     }
 
     //determining whether to get a save file or create a new one when called
-    public void readyUp() {
+    public void readyUp(bool save) {
         if (save) {
             parseSave();
         }
@@ -76,6 +100,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
         }
 
         nextIso = true;
+        loaded = true;
     }
 
     //passes the weights to AI Control
@@ -216,7 +241,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
             isoSpawn[i] = (iso1[i] + iso2[i]) / 2;
 
             //mutation check
-            if (Random.value >= 0.95) {
+            if (Random.value >= 0.99975) {
                 isoSpawn[i] = isoSpawn[i] * (Random.value + 2) / 2.5f;
             }
         }
@@ -237,6 +262,14 @@ public class population : MonoBehaviour { //This script is for controlling the g
             j += 2;
         }
 
+        //shuffling the array for more fair competition
+        for (int i = isos.Length - 1; i > 0; i--) {
+            int r = Random.Range(0, i);
+            float[] tmp = isos[i];
+            isos[i] = isos[r];
+            isos[r] = tmp;
+        }
+
         gen++; //Incrementing the generation number
         org = 0; //Resetting the organism count
         nextGen = false;
@@ -244,6 +277,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
     //writes to the designated save file
     public void savePop() {
+        saveName = sanitize(input2.GetComponent<InputField>().text);
         StreamWriter file = new StreamWriter("Saves/" + saveName + ".txt"); //The save file opened for writing
 
         //write the gen number
@@ -278,8 +312,12 @@ public class population : MonoBehaviour { //This script is for controlling the g
             isos[i] = new float[393];
         }
 
-        readyUp();
+        //check if save directory doesn't exist
+        if (!Directory.Exists("Saves")) {
+            //if it doesn't, create it
+            Directory.CreateDirectory("Saves");
 
+        }
     }
 
     // Update is called once per frame
@@ -293,7 +331,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
         }
 
         //stuff to run when the current simulation finishes
-        if (simComplete) {
+        if (simComplete && loaded) {
             nextIso = true;
 
             if (org == isos.Length) {

@@ -11,7 +11,7 @@ public class background : MonoBehaviour {
     public bool player1IsHuman, player2IsHuman, training; //whether certain players are human and whether or not in training
     public GameObject player1, player2; //The players
     public GameObject player1Controls, player2Controls; //The parents for the text boxes showing the controls
-    public bool loaded;
+    public GameObject AI1Load, AI2Load, AI1Save, AI2Save;
 
     void restart() {
         //Debug.Log("Running Restart");
@@ -32,33 +32,26 @@ public class background : MonoBehaviour {
         victor = 0; //resetting victor
     }
 
-    void setAIUI() {
-
-    }
-
     // Use this for initialization
     void Start() {
         if (player1IsHuman) {
             player1.GetComponent<AIControl>().enabled = false; //disabling Ai controls
             player1.GetComponent<population>().enabled = false;
-            //enabling control text showing
-            foreach (Text control in player1Controls.GetComponentsInChildren<Text>()) {
-                control.enabled = true;
-            }
+            player1Controls.SetActive(true);
         }
         else {
             player1.GetComponent<humanControl>().enabled = false;
+            AI1Load.SetActive(true);
         }
 
         if (player2IsHuman) {
             player2.GetComponent<AIControl>().enabled = false;
             player2.GetComponent<population>().enabled = false;
-            foreach (Text control in player2Controls.GetComponentsInChildren<Text>()) {
-                control.enabled = true;
-            }
+            player2Controls.SetActive(true);
         }
         else {
             player2.GetComponent<humanControl>().enabled = false;
+            AI2Load.SetActive(true);
         }
 
         if (player1IsHuman && player2IsHuman) {
@@ -113,12 +106,12 @@ public class background : MonoBehaviour {
                 score2 = score2 * (Random.value + 2) / 2.5f;
 
                 //passing to the appropriate weight if it is AI
-                if (!player1IsHuman) {
+                if (!player1IsHuman && player1.GetComponent<population>().loaded) {
                     player1.GetComponent<population>().isos[player1.GetComponent<population>().org - 1][392] = score1;
                     player1.GetComponent<population>().simComplete = true;
                 }
 
-                if (!player2IsHuman) {
+                if (!player2IsHuman && player2.GetComponent<population>().loaded) {
                     player2.GetComponent<population>().isos[player2.GetComponent<population>().org - 1][392] = score2;
                     player2.GetComponent<population>().simComplete = true;
                 }

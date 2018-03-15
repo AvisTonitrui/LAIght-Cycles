@@ -5,19 +5,18 @@ using UnityEngine;
 public class humanControl : MonoBehaviour {
 
     public int player;//which player this is
-    public bool isHuman = true;//boolean for if this player is human controlled
     string up, down, left, right;//These are the strings that relate to the controls for the cycle
     public GameObject cycle;//The cycle this is attached to
 
     // Use this for initialization
     void Start() {
-        if (player == 1 && isHuman) {
+        if (player == 1) {
             up = "Up1";
             down = "Down1";
             left = "Left1";
             right = "Right1";
         }
-        else if (player == 2 && isHuman) {
+        else if (player == 2) {
             up = "Up2";
             down = "Down2";
             left = "Left2";

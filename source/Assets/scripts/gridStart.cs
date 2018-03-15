@@ -20,9 +20,16 @@ public class gridStart : MonoBehaviour {
             }
         }
 
+        //reset the trails
         foreach(GameObject trail in map) {
-            trail.GetComponent<Renderer>().enabled = false;
+            if (trail.transform.position != new Vector3(-20, 0, 0) && trail.transform.position != new Vector3(20, 0, 0)) {
+                trail.GetComponent<Renderer>().enabled = false;
+            }            
         }
+
+        //setting the initial spots to be activated
+        trailMap[24, 44] = true;
+        trailMap[64, 44] = true;
     }
 
     // Use this for initialization
