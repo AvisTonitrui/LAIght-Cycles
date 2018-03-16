@@ -80,7 +80,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
             //puts this organism into the save list
             saveList[organism] = iso;
-
+            Debug.Log(saveList[organism][0]);
             //increment and readline for the next iteration
             organism++;
             line = save.ReadLine();
@@ -88,6 +88,10 @@ public class population : MonoBehaviour { //This script is for controlling the g
         //closing the file before returning
         save.Close();
         isos = saveList;
+
+        foreach(float[] iso1 in isos) {
+            Debug.Log(iso1[0]);
+        }
     }
 
     //determining whether to get a save file or create a new one when called
@@ -103,25 +107,24 @@ public class population : MonoBehaviour { //This script is for controlling the g
         loaded = true;
     }
 
-    //passes the weights to AI Control
-    public float[] quorra(int isoIndex) {
-        return isos[isoIndex];
-    }
-
     //compares two isos' info to determine which is better. True is iso 1, False is iso 2
     bool compareInfo(float[] iso1, float[] iso2) {
-        return iso1[SCOREINDEX] >= iso2[SCOREINDEX];
+        if (iso1[SCOREINDEX] % 1 == 0 && iso2[SCOREINDEX] % 1 == 0) {
+            return iso1[SCOREINDEX] >= iso2[SCOREINDEX];
+        }
+        else if (iso1[SCOREINDEX] % 1 != 0 && iso2[SCOREINDEX] % 1 != 0) {
+            return iso1[SCOREINDEX] <= iso2[SCOREINDEX];
+        }
+        else {
+            return iso1[SCOREINDEX] >= iso2[SCOREINDEX];
+        }
     }
 
     List<float[]> merge(List<float[]> hold1, List<float[]> hold2, int mergeSize) {
         List<float[]> mergeHold = new List<float[]>(); //The merged list
         int mergeLength = hold1.Count + hold2.Count; //The total length that mergeHold should be
-        //Debug.Log("Hold 1: " + hold1.Count.ToString());
-        //Debug.Log("Hold 2: " + hold2.Count.ToString());
-        //Debug.Log("Merge length: " + mergeLength.ToString());
         int i1 = 0;
         int i2 = mergeSize;
-
 
         //if hold2 is empty, we can just return hold1 as it is already sorted
         if (hold2.Count == 0) {
@@ -169,12 +172,10 @@ public class population : MonoBehaviour { //This script is for controlling the g
         List<float[]> mergeHold = new List<float[]>();
         float[][] myReturn = isoList; //What will get returned at the end of the sort
         int mergeSize = 1;//The size of the groups for the merge
-        int j = -1; //the index of the beginning
+        int j = 0; //the index of the beginning
 
         //looping until our mergesize is the whole of the population
         do {
-           //Debug.Log("Merge size: " + mergeSize.ToString());
-
             //going through all of the array and performing the sort
             for (int i = 0; i < myReturn.Length; i++) {
                 //first add to the holds if they're not full yet
@@ -192,13 +193,13 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
                     //puts the merged segment into the array
                     foreach (float[] iso in mergeHold) {
-                        j++;
                         myReturn[j] = iso;
+                        j++;
                     }
 
                     //error debug
                     if (j != i) {
-                        //Debug.Log("problem j");
+                        Debug.Log("problem j");
                     }
 
                     //clearing the holds and adding the current iteration to hold1
@@ -241,7 +242,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
             isoSpawn[i] = (iso1[i] + iso2[i]) / 2;
 
             //mutation check
-            if (Random.value >= 0.99975) {
+            if (Random.value >= 0.99) {
                 isoSpawn[i] = isoSpawn[i] * (Random.value + 2) / 2.5f;
             }
         }
@@ -257,7 +258,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
         int j = 0; //Second index marker
 
         //breeding and replacing the bottom third
-        for (int i = isos.Length * 2 / 3; i < isos.Length; i++) {
+        for (int i = Mathf.FloorToInt(isos.Length * 2 / 3); i < isos.Length; i++) {
             isos[i] = breedIsos(isos[j], isos[j + 1]);
             j += 2;
         }
@@ -324,7 +325,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
     void Update() {
         //gives AI control the next organism
         if (nextIso && !nextGen) {
-            cycle.GetComponent<AIControl>().weights = quorra(org);
+            cycle.GetComponent<AIControl>().weights = isos[org];
             org++;
             nextIso = false;
             ready = true;

@@ -93,17 +93,19 @@ public class background : MonoBehaviour {
                 float score1 = player1.GetComponent<cycleMovement>().tiles; //the scores for the AI, starting as the number of tiles survived
                 float score2 = player2.GetComponent<cycleMovement>().tiles; //They're still processed if a player isn't AI, but is only passed if it is
 
-                //score is doubled if victor
-                if (victor == 1) {
-                    score1 = score1 * 2;
-                }
-                else if (victor == 2) {
-                    score2 = score2 * 2;
-                }
-
                 //addition of the random factor
                 score1 = score1 * (Random.value + 2) / 2.5f;
                 score2 = score2 * (Random.value + 2) / 2.5f;
+
+                //score is doubled if victor
+                if (victor == 1) {
+                    score1 = Mathf.Floor(score1 * 3) + 0.1f;
+                    score2 = Mathf.Floor(score2);
+                }
+                else if (victor == 2) {
+                    score2 = Mathf.Floor(score2 * 3) + 0.1f;
+                    score1 = Mathf.Floor(score1);
+                }
 
                 //passing to the appropriate weight if it is AI
                 if (!player1IsHuman && player1.GetComponent<population>().loaded) {
