@@ -81,6 +81,11 @@ public class population : MonoBehaviour { //This script is for controlling the g
             //puts this organism into the save list
             saveList[organism] = iso;
             Debug.Log(saveList[organism][0]);
+
+            if (organism != 0) {
+                Debug.Log(saveList[organism - 1][0]);
+            }
+
             //increment and readline for the next iteration
             organism++;
             line = save.ReadLine();
@@ -89,7 +94,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
         save.Close();
         isos = saveList;
 
-        foreach(float[] iso1 in isos) {
+        foreach(float[] iso1 in saveList) {
             Debug.Log(iso1[0]);
         }
     }
