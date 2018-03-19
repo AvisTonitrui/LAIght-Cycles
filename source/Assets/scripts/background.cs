@@ -14,7 +14,6 @@ public class background : MonoBehaviour {
     public GameObject AI1Load, AI2Load, AI1Save, AI2Save;
 
     void restart() {
-        //Debug.Log("Running Restart");
         player1.GetComponent<cycleMovement>().tiles = 0; //resetting tiles
         player2.GetComponent<cycleMovement>().tiles = 0;
         player1.GetComponent<population>().ready = false; //ressetting ready values to prevent duplication
@@ -61,6 +60,7 @@ public class background : MonoBehaviour {
         if (!player1IsHuman && !player2IsHuman) {
             training = true;
         }
+
     }
 
     // Update is called once per frame

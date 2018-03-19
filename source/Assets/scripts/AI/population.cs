@@ -19,12 +19,13 @@ public class population : MonoBehaviour { //This script is for controlling the g
     const int SCOREINDEX = 392; //The index that the score is kept at
     public GameObject input1, input2; //The input for the save file name
     public bool loaded = false; //To show that we currently have a loaded file in
+    public GameObject genDisplay, orgDisplay;
 
     //function for sanitizing input for save names
     string sanitize(string given) {
         string output = given;
 
-        output = Regex.Replace(output, @"[^a-zA-Z0-9 -_]", "");
+        output = Regex.Replace(output, @"[^a-zA-Z0-9\s-_]", "");
         output = Regex.Replace(output, @"[^a-zA-Z0-9-_]", "-");
 
         return output;
@@ -57,8 +58,6 @@ public class population : MonoBehaviour { //This script is for controlling the g
         StreamReader save = new StreamReader("Saves/" + saveName + ".txt"); //The save file opened for reading
         int organism = 0; //index marker while reading the file
         float[][] saveList = new float[99][]; //The placeholder for the save file
-        float[] iso = new float[393]; //The organism
-        string[] isoString; //The organism still in string form
 
         /* Save file format:
          *   Line 1: Generation number
@@ -70,6 +69,8 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
         //starts iterating through the organisms
         while (line != null) {
+            string[] isoString; //The organism still in string form
+            float[] iso = new float[393]; //The organism
             //explodes the string into an array
             isoString = line.Split(',');
 
@@ -80,11 +81,6 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
             //puts this organism into the save list
             saveList[organism] = iso;
-            Debug.Log(saveList[organism][0]);
-
-            if (organism != 0) {
-                Debug.Log(saveList[organism - 1][0]);
-            }
 
             //increment and readline for the next iteration
             organism++;
@@ -93,10 +89,6 @@ public class population : MonoBehaviour { //This script is for controlling the g
         //closing the file before returning
         save.Close();
         isos = saveList;
-
-        foreach(float[] iso1 in saveList) {
-            Debug.Log(iso1[0]);
-        }
     }
 
     //determining whether to get a save file or create a new one when called
@@ -108,6 +100,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
             makePop();
         }
 
+        genDisplay.GetComponent<Text>().text = "Gen: " + gen;
         nextIso = true;
         loaded = true;
     }
@@ -185,26 +178,18 @@ public class population : MonoBehaviour { //This script is for controlling the g
             for (int i = 0; i < myReturn.Length; i++) {
                 //first add to the holds if they're not full yet
                 if (hold1.Count < mergeSize) {
-                    //Debug.Log("Adding to Hold1, now at " + hold1.Count.ToString());
                     hold1.Add(myReturn[i]);
                 }
                 else if (hold2.Count < mergeSize) {
-                    //Debug.Log("Adding to Hold2, now at " + hold2.Count.ToString());
                     hold2.Add(myReturn[i]);
                 }
                 else { //Perform a merge and start filling out the next set of holds afterwards
                     mergeHold = merge(hold1, hold2, mergeSize); //Gets the merged version of the segment we're on
-                    //Debug.Log(mergeHold.Count);
 
                     //puts the merged segment into the array
                     foreach (float[] iso in mergeHold) {
                         myReturn[j] = iso;
                         j++;
-                    }
-
-                    //error debug
-                    if (j != i) {
-                        Debug.Log("problem j");
                     }
 
                     //clearing the holds and adding the current iteration to hold1
@@ -216,7 +201,6 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
                 //checking to see if this is the last element, therefore requiring a final merge and incrementing mergeSize
                 if (i + 1 == myReturn.Length) {
-                    //Debug.Log("Final Merge");
                     mergeHold = merge(hold1, hold2, mergeSize);
 
                     //putting the final merge into the return
@@ -278,6 +262,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
         gen++; //Incrementing the generation number
         org = 0; //Resetting the organism count
+        genDisplay.GetComponent<Text>().text = "Generation: " + gen;
         nextGen = false;
     }
 
@@ -332,6 +317,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
         if (nextIso && !nextGen) {
             cycle.GetComponent<AIControl>().weights = isos[org];
             org++;
+            orgDisplay.GetComponent<Text>().text = "Iso: " + org;
             nextIso = false;
             ready = true;
         }

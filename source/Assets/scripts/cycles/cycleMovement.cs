@@ -8,8 +8,8 @@ public class cycleMovement : MonoBehaviour {
     public int direction; //This is an int which determines which direction the cycle will go
     private const float speed = 0.25f; //The speed of the cycle, which is constant but will need testing
     public GameObject cycle; //The cycle te script is attached to
-    public GameObject trail; //The trail of the cycle
-    int trailX, trailY; //the position of the trail
+    public GameObject trail, trail2; //The trail of the cycle
+    int trailX, trailY, trail2X, trail2Y; //the position of the trail
     public Sprite color; //The sprite that chooses the color of the trail
     public GameObject processing; //The background processing
     public int player, opponent; //The player and the opponent numbers
