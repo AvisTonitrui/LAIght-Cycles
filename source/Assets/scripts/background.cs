@@ -26,6 +26,10 @@ public class background : MonoBehaviour {
         player2.GetComponent<cycleMovement>().restart();
         player1.GetComponent<cycleMovement>().hasHit = false;
         player2.GetComponent<cycleMovement>().hasHit = false;
+        player1.GetComponent<cycleMovement>().onEdge = false;
+        player2.GetComponent<cycleMovement>().onEdge = false;
+        player1.GetComponent<cycleMovement>().canTurn = false;
+        player2.GetComponent<cycleMovement>().canTurn = false;
         player1.GetComponent<cycleMovement>().trail = null;
         player2.GetComponent<cycleMovement>().trail = null;
         victor = 0; //resetting victor

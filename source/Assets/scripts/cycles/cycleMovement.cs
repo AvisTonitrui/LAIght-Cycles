@@ -8,8 +8,8 @@ public class cycleMovement : MonoBehaviour {
     public int direction; //This is an int which determines which direction the cycle will go
     private const float speed = 0.25f; //The speed of the cycle, which is constant but will need testing
     public GameObject cycle; //The cycle te script is attached to
-    public GameObject trail, trail2; //The trail of the cycle
-    int trailX, trailY, trail2X, trail2Y; //the position of the trail
+    public GameObject trail; //The trail of the cycle
+    int trailX, trailY; //the position of the trail
     public Sprite color; //The sprite that chooses the color of the trail
     public GameObject processing; //The background processing
     public int player, opponent; //The player and the opponent numbers
@@ -19,6 +19,7 @@ public class cycleMovement : MonoBehaviour {
     const int gridSize = 44; //The size of the grid along each axis in 4 directions
     const int wallCoordinate = gridSize + 1; //The constant coordinate for the wals
     public int tiles = 0; //the number of tiles that the cycle has moved, used for AI
+    public bool onEdge, canTurn;
 
     RaycastHit2D[] turn(int face) { // turns the cycle to face up, down, left, or right (1, 2, 3, 4 respectively), raycasts for what's ahead and places the marker for the AI
         //resets face if it's the opposite direction to what it is currently facing, in order to prevent backtracking/instant death
@@ -102,10 +103,22 @@ public class cycleMovement : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        trail = collision.gameObject;
-        trail.GetComponent<SpriteRenderer>().sprite = color; //Changes the trail to the proper color
-        trailX = Mathf.RoundToInt(trail.transform.position.x + gridSize); //sets the relative coordinates for the trail for use in our array
-        trailY = Mathf.RoundToInt(trail.transform.position.y + gridSize);
+        if (collision.tag == "trail") {
+            trail = collision.gameObject;
+            trail.GetComponent<SpriteRenderer>().sprite = color; //Changes the trail to the proper color
+            trailX = Mathf.RoundToInt(trail.transform.position.x + gridSize); //sets the relative coordinates for the trail for use in our array
+            trailY = Mathf.RoundToInt(trail.transform.position.y + gridSize);
+        } else if (collision.tag == "edge") {
+            Debug.Log("hit an edge");
+            onEdge = true;
+            canTurn = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision) {
+        if (collision.tag == "edge") {
+            onEdge = false;
+        }
     }
 
     //restarts for the next simulation
@@ -139,7 +152,10 @@ public class cycleMovement : MonoBehaviour {
         }
 
         //turns cycle, creates trails, and ensures the next grid spot it's going to is legal
-        if (Mathf.Approximately(cycle.transform.position.x % 1, 0) && Mathf.Approximately(cycle.transform.position.y % 1, 0)) { //Checks if cycle is on a grid point
+        if (canTurn && !onEdge) { //Checks if cycle is on a grid point
+            //rounding position
+            cycle.transform.position = new Vector3(Mathf.Floor(cycle.transform.position.x + 0.5f), Mathf.Floor(cycle.transform.position.y + 0.5f), 0);
+
             RaycastHit2D[] hits; //The variable for what raycasts hit
             hits = turn(direction); //Turns the cycle in the last direction it was given
 
@@ -185,6 +201,8 @@ public class cycleMovement : MonoBehaviour {
                 trail.GetComponent<Renderer>().enabled = true; //Enables the trail
                 cycle.GetComponent<AIControl>().trailMap[trailX, trailY] = true; //used for AI interaction
             }
+
+            canTurn = false;
         }
 
     }
