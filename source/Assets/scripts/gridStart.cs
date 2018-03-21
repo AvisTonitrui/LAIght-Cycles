@@ -6,7 +6,7 @@ using System.Linq;
 public class gridStart : MonoBehaviour {
 
     public GameObject trail;
-    public const int gridSize = 44;
+    public const int gridSize = 45;
     public List<GameObject> map = new List<GameObject>();
     Transform listMap;
     public bool[,] trailMap = new bool[(gridSize * 2 + 1), (gridSize * 2) + 1];
@@ -24,6 +24,8 @@ public class gridStart : MonoBehaviour {
         foreach (GameObject trail in map) {
             if (trail.transform.position != new Vector3(-20f, 0f, 0f) && trail.transform.position != new Vector3(20f, 0f, 0f)) {
                 trail.GetComponent<Renderer>().enabled = false;
+            } else if (Mathf.FloorToInt(trail.transform.position.y + 0.5f) == gridSize || Mathf.FloorToInt(trail.transform.position.x + 0.5f) == gridSize) {
+                trailMap[Mathf.FloorToInt(trail.transform.position.x + 0.5f) + gridSize, Mathf.FloorToInt(trail.transform.position.y + 0.5f) + gridSize] = true;
             }
             else {
                 //Debug.Log("Rendering");
@@ -32,8 +34,8 @@ public class gridStart : MonoBehaviour {
         }
 
         //setting the initial spots to be activated
-        trailMap[24, 44] = true;
-        trailMap[64, 44] = true;
+        trailMap[25, 45] = true;
+        trailMap[65, 45] = true;
     }
 
     // Use this for initialization
@@ -61,8 +63,8 @@ public class gridStart : MonoBehaviour {
         }
 
         //setting the initial spots to be activated
-        trailMap[24, 44] = true;
-        trailMap[64, 44] = true;
+        trailMap[25, 45] = true;
+        trailMap[65, 45] = true;
     }
 
     // Update is called once per frame
