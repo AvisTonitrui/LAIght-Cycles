@@ -10,8 +10,8 @@ public class AIControl : MonoBehaviour { //This class takes the weights from an 
     float[] outputs = new float[4]; //The output neurons
     public GameObject cycle; //The cycle this is attached to
     public bool haveIns, haveHiddens, haveOuts; //Booleans for knowing where we are at in calculations
-    const int gridSize = 45;
-    const int wallCoordinate = gridSize;
+    const int gridSize = 44;
+    const int wallCoordinate = gridSize + 1;
     public bool[,] trailMap = new bool[gridSize, gridSize];
 
     //sets the inputs for wall distance
