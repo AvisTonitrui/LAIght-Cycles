@@ -33,6 +33,10 @@ public class background : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        player1IsHuman = globals.human1;
+        player2IsHuman = globals.human2;
+        training = globals.train;
+
         if (player1IsHuman) {
             player1.GetComponent<AIControl>().enabled = false; //disabling Ai controls
             player1.GetComponent<population>().enabled = false;
@@ -99,11 +103,11 @@ public class background : MonoBehaviour {
 
                 //score is doubled if victor
                 if (victor == 1) {
-                    score1 = Mathf.Floor(score1 * 3) + 0.1f;
+                    score1 = Mathf.Floor(score1 * 2) + 0.1f;
                     score2 = Mathf.Floor(score2);
                 }
                 else if (victor == 2) {
-                    score2 = Mathf.Floor(score2 * 3) + 0.1f;
+                    score2 = Mathf.Floor(score2 * 2) + 0.1f;
                     score1 = Mathf.Floor(score1);
                 }
 
