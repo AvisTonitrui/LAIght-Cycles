@@ -8,5 +8,6 @@ public static class globals {
     public static bool human2;
     public static bool train;
     public static int victor;
+    public static string victoryMessage = "flibidishkibit horschikinini";
 
 }

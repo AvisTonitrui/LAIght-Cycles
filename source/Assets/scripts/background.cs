@@ -92,14 +92,16 @@ public class background : MonoBehaviour {
 
                 //goes to victory/loss screens if not training
                 if (victor == 1) {
-                    SceneManager.LoadScene("player 1 win");
+                    globals.victoryMessage = "Player 1 Wins!";
                 }
                 else if (victor == 2) {
-                    SceneManager.LoadScene("player 2 win");
+                    globals.victoryMessage = "Player 2 Wins!";
                 }
                 else {
-                    SceneManager.LoadScene("tie");
+                    globals.victoryMessage = "Tie!";
                 }
+
+                SceneManager.LoadScene("end");
             }
             else {
                 //passes info to the AI
