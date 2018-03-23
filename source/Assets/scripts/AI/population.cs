@@ -19,7 +19,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
     const int SCOREINDEX = 392; //The index that the score is kept at
     public GameObject input1, input2; //The input for the save file name
     public bool loaded = false; //To show that we currently have a loaded file in
-    public GameObject genDisplay, orgDisplay;
+    public GameObject genDisplay, orgDisplay, simpleToggle;
 
     //function for sanitizing input for save names
     string sanitize(string given) {
@@ -106,19 +106,25 @@ public class population : MonoBehaviour { //This script is for controlling the g
     }
 
     //compares two isos' info to determine which is better. True is iso 1, False is iso 2
-    bool compareInfo(float[] iso1, float[] iso2) {
-        if (iso1[SCOREINDEX] % 1 == 0 && iso2[SCOREINDEX] % 1 == 0) {
+    bool compareInfo(float[] iso1, float[] iso2, bool simple) {
+        if (simple) {
             return iso1[SCOREINDEX] >= iso2[SCOREINDEX];
-        }
-        else if (iso1[SCOREINDEX] % 1 != 0 && iso2[SCOREINDEX] % 1 != 0) {
-            return iso1[SCOREINDEX] <= iso2[SCOREINDEX];
         }
         else {
-            return iso1[SCOREINDEX] >= iso2[SCOREINDEX];
+            if (iso1[SCOREINDEX] % 1 == 0 && iso2[SCOREINDEX] % 1 == 0) {
+                return iso1[SCOREINDEX] >= iso2[SCOREINDEX];
+            }
+            else if (iso1[SCOREINDEX] % 1 != 0 && iso2[SCOREINDEX] % 1 != 0) {
+                return iso1[SCOREINDEX] <= iso2[SCOREINDEX];
+            }
+            else {
+                return iso1[SCOREINDEX] >= iso2[SCOREINDEX];
+            }
         }
+
     }
 
-    List<float[]> merge(List<float[]> hold1, List<float[]> hold2, int mergeSize) {
+    List<float[]> merge(List<float[]> hold1, List<float[]> hold2, int mergeSize, bool simple) {
         List<float[]> mergeHold = new List<float[]>(); //The merged list
         int mergeLength = hold1.Count + hold2.Count; //The total length that mergeHold should be
         int i1 = 0;
@@ -131,7 +137,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
         while (i2 < mergeLength) {
             //sorting one by one
-            if (compareInfo(hold1[i1], hold2[i2 - mergeSize])) {
+            if (compareInfo(hold1[i1], hold2[i2 - mergeSize], simple)) {
                 mergeHold.Add(hold1[i1]);
                 i1++;
             }
@@ -163,7 +169,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
     }
 
     //sorts the isos using merge sort
-    float[][] sortIsos(float[][] isoList) {
+    float[][] sortIsos(float[][] isoList, bool simple) {
         //variable declarations for the function
         List<float[]> hold1 = new List<float[]>(); //Holders for performing merges
         List<float[]> hold2 = new List<float[]>();
@@ -184,7 +190,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
                     hold2.Add(myReturn[i]);
                 }
                 else { //Perform a merge and start filling out the next set of holds afterwards
-                    mergeHold = merge(hold1, hold2, mergeSize); //Gets the merged version of the segment we're on
+                    mergeHold = merge(hold1, hold2, mergeSize, simple); //Gets the merged version of the segment we're on
 
                     //puts the merged segment into the array
                     foreach (float[] iso in mergeHold) {
@@ -201,7 +207,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
                 //checking to see if this is the last element, therefore requiring a final merge and incrementing mergeSize
                 if (i + 1 == myReturn.Length) {
-                    mergeHold = merge(hold1, hold2, mergeSize);
+                    mergeHold = merge(hold1, hold2, mergeSize, simple);
 
                     //putting the final merge into the return
                     foreach (float[] iso in mergeHold) {
@@ -242,7 +248,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
     //creates the next generation and resets needed variables
     public void newGen() {
         //ranking each Iso
-        isos = sortIsos(isos);
+        isos = sortIsos(isos, simpleToggle.GetComponent<Toggle>().isOn);
 
         int j = 0; //Second index marker
 
