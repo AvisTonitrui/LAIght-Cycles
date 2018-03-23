@@ -17,7 +17,7 @@ Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Dat
 Loading H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
 Loading H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
-- Completed reload, in  2.659 seconds
+- Completed reload, in  2.670 seconds
 Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
@@ -25,13 +25,150 @@ desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 2.489992 ms
+UnloadTime: 4.291307 ms
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 3278 -> priority: 1 
-  Thread -> id: 28e4 -> priority: 1 
+  Thread -> id: ffc -> priority: 1 
+  Thread -> id: 23f0 -> priority: 1 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 1.996019 ms
+UnloadTime: 2.133334 ms
 
 Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 617.
-Total: 0.578103 ms (FindLiveObjects: 0.040563 ms CreateObjectMapping: 0.031549 ms MarkObjects: 0.466028 ms  DeleteObjects: 0.037859 ms)
+Total: 0.419756 ms (FindLiveObjects: 0.043267 ms CreateObjectMapping: 0.033953 ms MarkObjects: 0.292056 ms  DeleteObjects: 0.034554 ms)
+
+Initialize engine version: 5.5.1f1 (88d00a7498cd)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: AMD FirePro W4300 (ID=0x6649)
+    Vendor:   ATI
+    VRAM:     3072 MB
+    Driver:   15.201.1701.0
+Begin MonoManager ReloadAssembly
+Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
+Loading H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
+- Completed reload, in  1.503 seconds
+Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: H:\unity projects\LAIght-Cycles\version 1.1\LAIght Cycles_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+<RI> Initializing input.
+XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 1.163418 ms
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 2ecc -> priority: 1 
+  Thread -> id: 2738 -> priority: 1 
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 2.137541 ms
+
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 617.
+Total: 0.318197 ms (FindLiveObjects: 0.019530 ms CreateObjectMapping: 0.016225 ms MarkObjects: 0.239774 ms  DeleteObjects: 0.027643 ms)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 150.483917 ms
+
+Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 337.
+Total: 0.247887 ms (FindLiveObjects: 0.050779 ms CreateObjectMapping: 0.010516 ms MarkObjects: 0.172770 ms  DeleteObjects: 0.012920 ms)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.443493 ms
+
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 617.
+Total: 0.333220 ms (FindLiveObjects: 0.033953 ms CreateObjectMapping: 0.011117 ms MarkObjects: 0.260507 ms  DeleteObjects: 0.027342 ms)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at cycleMovement.LateUpdate () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at cycleMovement.LateUpdate () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at cycleMovement.LateUpdate () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at cycleMovement.LateUpdate () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 148.318741 ms
+
+Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 276.
+Total: 0.187493 ms (FindLiveObjects: 0.042967 ms CreateObjectMapping: 0.009615 ms MarkObjects: 0.121089 ms  DeleteObjects: 0.013521 ms)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.420957 ms
+
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 617.
+Total: 0.374986 ms (FindLiveObjects: 0.029746 ms CreateObjectMapping: 0.012018 ms MarkObjects: 0.300469 ms  DeleteObjects: 0.032150 ms)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at cycleMovement.LateUpdate () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at cycleMovement.LateUpdate () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at cycleMovement.LateUpdate () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at cycleMovement.LateUpdate () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 171.254791 ms
+
+Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 276.
+Total: 0.190497 ms (FindLiveObjects: 0.024938 ms CreateObjectMapping: 0.022535 ms MarkObjects: 0.132206 ms  DeleteObjects: 0.010816 ms)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.301070 ms
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 337.
+Total: 0.265314 ms (FindLiveObjects: 0.034253 ms CreateObjectMapping: 0.011417 ms MarkObjects: 0.212732 ms  DeleteObjects: 0.006009 ms)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.344037 ms
+
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 617.
+Total: 0.332018 ms (FindLiveObjects: 0.022234 ms CreateObjectMapping: 0.011117 ms MarkObjects: 0.270723 ms  DeleteObjects: 0.027643 ms)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 151.445419 ms
+
+Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 276.
+Total: 0.247887 ms (FindLiveObjects: 0.033953 ms CreateObjectMapping: 0.026140 ms MarkObjects: 0.172169 ms  DeleteObjects: 0.015023 ms)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.290253 ms
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 337.
+Total: 0.228957 ms (FindLiveObjects: 0.018028 ms CreateObjectMapping: 0.010816 ms MarkObjects: 0.193502 ms  DeleteObjects: 0.005708 ms)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.342535 ms
+
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 617.
+Total: 0.390911 ms (FindLiveObjects: 0.030647 ms CreateObjectMapping: 0.012018 ms MarkObjects: 0.316394 ms  DeleteObjects: 0.031248 ms)
 
