@@ -12,6 +12,7 @@ public class background : MonoBehaviour {
     public GameObject player1, player2; //The players
     public GameObject player1Controls, player2Controls; //The parents for the text boxes showing the controls
     public GameObject AI1Load, AI2Load, AI1Save, AI2Save;
+    public float winBonus = 2; //The multiplier for victory
 
     //resets for the next simulation
     void restart() {
@@ -114,11 +115,11 @@ public class background : MonoBehaviour {
 
                 //score is doubled if victor
                 if (victor == 1) {
-                    score1 = Mathf.Floor(score1 * 2) + 0.1f;
+                    score1 = Mathf.Floor(score1 * winBonus) + 0.1f;
                     score2 = Mathf.Floor(score2);
                 }
                 else if (victor == 2) {
-                    score2 = Mathf.Floor(score2 * 2) + 0.1f;
+                    score2 = Mathf.Floor(score2 * winBonus) + 0.1f;
                     score1 = Mathf.Floor(score1);
                 }
 

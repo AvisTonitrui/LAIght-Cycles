@@ -19,7 +19,8 @@ public class population : MonoBehaviour { //This script is for controlling the g
     const int SCOREINDEX = 392; //The index that the score is kept at
     public GameObject input1, input2; //The input for the save file name
     public bool loaded = false; //To show that we currently have a loaded file in
-    public GameObject genDisplay, orgDisplay, simpleToggle;
+    public GameObject genDisplay, orgDisplay, simpleToggle, bonusChange;
+    public float winBonus = 2; //the bonus value
 
     //function for sanitizing input for save names
     string sanitize(string given) {
@@ -247,6 +248,29 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
     //creates the next generation and resets needed variables
     public void newGen() {
+        //getting the current multiplier
+        try {
+            winBonus = float.Parse(bonusChange.GetComponent<InputField>().text);
+        }
+        catch {
+            winBonus = globals.winBonus;
+        }
+
+
+        //reapplying the win bonus
+        foreach (float[] iso in isos) {
+            //checking if the iso was a victor
+            if (iso[SCOREINDEX] % 1 != 0) {
+                iso[SCOREINDEX] = Mathf.Floor((iso[SCOREINDEX] - 0.1f) / globals.winBonus * winBonus) + 0.1f;
+            }
+        }
+
+        //setting the global multiplier to keep track of last used
+        globals.winBonus = winBonus;
+
+        //setting the background's winBonus to temporarily calculate for this generation
+        cycle.GetComponent<cycleMovement>().processing.GetComponent<background>().winBonus = winBonus;
+
         //ranking each Iso
         isos = sortIsos(isos, simpleToggle.GetComponent<Toggle>().isOn);
 
