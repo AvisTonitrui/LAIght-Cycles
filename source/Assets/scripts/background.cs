@@ -34,7 +34,7 @@ public class background : MonoBehaviour {
 
     //loads back to the main menu
     public void toMain() {
-        SceneManager.LoadScene("main");
+        SceneManager.LoadScene("Main Menu");
     }
 
     // Use this for initialization
@@ -131,6 +131,10 @@ public class background : MonoBehaviour {
                     player2.GetComponent<population>().simComplete = true;
                 }
             }
+        }
+
+        if (Input.GetButtonDown("Cancel")) {
+            toMain();
         }
     }
 }
