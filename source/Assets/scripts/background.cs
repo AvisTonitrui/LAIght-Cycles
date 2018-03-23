@@ -11,7 +11,7 @@ public class background : MonoBehaviour {
     public bool player1IsHuman, player2IsHuman, training; //whether certain players are human and whether or not in training
     public GameObject player1, player2; //The players
     public GameObject player1Controls, player2Controls; //The parents for the text boxes showing the controls
-    public GameObject AI1Load, AI2Load, AI1Save, AI2Save;
+    public GameObject AI1Controls, AI2Controls, AI1Load, AI2Load, AI1Compete, AI2Compete;
     public float winBonus = 2; //The multiplier for victory
 
     //resets for the next simulation
@@ -44,6 +44,14 @@ public class background : MonoBehaviour {
         player2IsHuman = globals.human2;
         training = globals.train;
 
+        if (player1IsHuman && player2IsHuman) {
+            training = false;
+        }
+
+        if (!player1IsHuman && !player2IsHuman) {
+            training = true;
+        }
+
         if (player1IsHuman) {
             player1.GetComponent<AIControl>().enabled = false; //disabling Ai controls
             player1.GetComponent<population>().enabled = false;
@@ -51,7 +59,14 @@ public class background : MonoBehaviour {
         }
         else {
             player1.GetComponent<humanControl>().enabled = false;
-            AI1Load.SetActive(true);
+            AI1Controls.SetActive(true);
+
+            if (training) {
+                AI1Load.SetActive(true);
+            }
+            else {
+                AI1Compete.SetActive(true);
+            }
         }
 
         if (player2IsHuman) {
@@ -61,16 +76,16 @@ public class background : MonoBehaviour {
         }
         else {
             player2.GetComponent<humanControl>().enabled = false;
-            AI2Load.SetActive(true);
+            AI2Controls.SetActive(true);
+
+            if (training) {
+                AI2Load.SetActive(true);
+            }
+            else {
+                AI2Compete.SetActive(true);
+            }
         }
 
-        if (player1IsHuman && player2IsHuman) {
-            training = false;
-        }
-
-        if (!player1IsHuman && !player2IsHuman) {
-            training = true;
-        }
 
     }
 

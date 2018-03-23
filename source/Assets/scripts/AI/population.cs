@@ -17,9 +17,9 @@ public class population : MonoBehaviour { //This script is for controlling the g
     public GameObject cycle; //The cycle this script is attached to
     string saveName; //The name of the save file
     const int SCOREINDEX = 392; //The index that the score is kept at
-    public GameObject input1, input2; //The input for the save file name
+    public GameObject input1; //The input for the save file name
     public bool loaded = false; //To show that we currently have a loaded file in
-    public GameObject genDisplay, orgDisplay, simpleToggle, bonusChange;
+    public GameObject genDisplay, orgDisplay, simpleToggle, bonusChange, orgChange;
     public float winBonus = 2; //the bonus value
 
     //function for sanitizing input for save names
@@ -90,6 +90,16 @@ public class population : MonoBehaviour { //This script is for controlling the g
         //closing the file before returning
         save.Close();
         isos = saveList;
+    }
+
+    //set the organism for competition
+    public void setOrg() {
+        try {
+            org = int.Parse(orgChange.GetComponent<InputField>().text);
+        } catch {
+            org = 0;
+        }
+        
     }
 
     //determining whether to get a save file or create a new one when called
@@ -298,7 +308,7 @@ public class population : MonoBehaviour { //This script is for controlling the g
 
     //writes to the designated save file
     public void savePop() {
-        saveName = sanitize(input2.GetComponent<InputField>().text);
+        saveName = sanitize(input1.GetComponent<InputField>().text);
         StreamWriter file = new StreamWriter("Saves/" + saveName + ".txt"); //The save file opened for writing
 
         //write the gen number
