@@ -7,5 +7,6 @@ public static class globals {
     public static bool human1;
     public static bool human2;
     public static bool train;
+    public static int victor;
 
 }

@@ -13,6 +13,7 @@ public class background : MonoBehaviour {
     public GameObject player1Controls, player2Controls; //The parents for the text boxes showing the controls
     public GameObject AI1Load, AI2Load, AI1Save, AI2Save;
 
+    //resets for the next simulation
     void restart() {
         player1.GetComponent<cycleMovement>().tiles = 0; //resetting tiles
         player2.GetComponent<cycleMovement>().tiles = 0;
@@ -29,6 +30,11 @@ public class background : MonoBehaviour {
         player1.GetComponent<cycleMovement>().trail = null;
         player2.GetComponent<cycleMovement>().trail = null;
         victor = 0; //resetting victor
+    }
+
+    //loads back to the main menu
+    public void toMain() {
+        SceneManager.LoadScene("main");
     }
 
     // Use this for initialization
@@ -81,6 +87,9 @@ public class background : MonoBehaviour {
         if (victor > 0 && gameActive) {
             gameActive = false;
             if ((!training)) {
+                //setting the global victor variable
+                globals.victor = victor;
+
                 //goes to victory/loss screens if not training
                 if (victor == 1) {
                     SceneManager.LoadScene("player 1 win");
